@@ -1,0 +1,410 @@
+openapi: 3.1.0
+info:
+  title: Burger Singh Discovery API
+  version: wp/v2
+  summary: Self-describing site, content-type, taxonomy and status metadata.
+  description: 'The self-describing route index that makes the whole burgersinghonline.com surface machine-readable:
+    the wp-json root document (site name, description, 12 registered namespaces, 200 routes and the supported
+    authentication methods), the registered content types and taxonomies, the available post statuses,
+    and the single public author record. This is the entry point an agent should read first.'
+  contact:
+    name: Burger Singh
+    url: https://www.burgersinghonline.com/feedback/
+  license:
+    name: Site content - all rights reserved, see Terms and Conditions
+    url: https://www.burgersinghonline.com/terms-and-conditions/
+  x-apis-io-provenance:
+    method: derived
+    source: https://www.burgersinghonline.com/wp-json/
+    derived_on: '2026-08-08'
+    note: The root document was fetched anonymously and parsed on 2026-08-08 (200 routes, 12 namespaces).
+      Every operation below was probed anonymously and returned HTTP 200.
+servers:
+- url: https://www.burgersinghonline.com/wp-json
+  description: Production
+tags:
+- name: Discovery
+  description: Route index and registered-object metadata for the Burger Singh site.
+paths:
+  /:
+    get:
+      tags:
+      - Discovery
+      operationId: getRootIndex
+      summary: Get the REST API root index
+      description: Returns the site name, description, home and site URLs, GMT offset, site icon, the
+        list of registered namespaces, the full route table with per-route methods and argument schemas,
+        and the supported authentication methods.
+      parameters:
+      - name: namespace
+        in: query
+        description: Limit the index to a single registered namespace, e.g. wp/v2.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/context'
+      responses:
+        '200':
+          description: The REST API root index.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RootIndex'
+  /wp/v2/types:
+    get:
+      tags:
+      - Discovery
+      operationId: listTypes
+      summary: List registered content types
+      description: 'Returns every REST-exposed content type keyed by slug. Verified live on this host:
+        post, page, attachment, nav_menu_item, wp_block, wp_template, wp_template_part, wp_global_styles,
+        wp_navigation, wp_font_family and wp_font_face.'
+      parameters:
+      - $ref: '#/components/parameters/context'
+      responses:
+        '200':
+          description: A map of content-type slug to type descriptor.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/ContentType'
+  /wp/v2/taxonomies:
+    get:
+      tags:
+      - Discovery
+      operationId: listTaxonomies
+      summary: List registered taxonomies
+      description: 'Returns every REST-exposed taxonomy keyed by slug, with the content types it applies
+        to. Verified live: category applies to post, inthenews, hotdeals and attachment.'
+      parameters:
+      - $ref: '#/components/parameters/context'
+      - name: type
+        in: query
+        description: Limit results to taxonomies associated with a content type.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A map of taxonomy slug to taxonomy descriptor.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/Taxonomy'
+  /wp/v2/statuses:
+    get:
+      tags:
+      - Discovery
+      operationId: listStatuses
+      summary: List available post statuses
+      description: 'Returns the publicly visible post statuses. Verified live on this host: publish and
+        acf-disabled.'
+      parameters:
+      - $ref: '#/components/parameters/context'
+      responses:
+        '200':
+          description: A map of status slug to status descriptor.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /wp/v2/users:
+    get:
+      tags:
+      - Discovery
+      operationId: listUsers
+      summary: List public authors
+      description: 'Returns the public author records. Verified live: a single author (X-WP-Total: 1).'
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - $ref: '#/components/parameters/search'
+      - $ref: '#/components/parameters/context'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: A page of public author records.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/XWPTotal'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/XWPTotalPages'
+            Link:
+              $ref: '#/components/headers/LinkPagination'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+components:
+  parameters:
+    page:
+      name: page
+      in: query
+      description: Current page of the collection. Defaults to 1.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    perPage:
+      name: per_page
+      in: query
+      description: 'Maximum number of items returned. Verified live: values outside 1-100 return HTTP
+        400 rest_invalid_param.'
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines the fields present in the response.
+        Only view and embed are available anonymously.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        default: view
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated list of fields to limit the response to. Verified live.
+      schema:
+        type: string
+  headers:
+    XWPTotal:
+      description: Total number of items in the collection.
+      schema:
+        type: integer
+    XWPTotalPages:
+      description: Total number of pages in the collection at the current per_page.
+      schema:
+        type: integer
+    LinkPagination:
+      description: RFC 8288 Link header carrying next and prev pagination relations. Verified live on
+        /wp/v2/pages.
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: The requested object does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_post_invalid_id
+            message: Invalid post ID.
+            data:
+              status: 404
+    InvalidParam:
+      description: One or more query parameters failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_invalid_param
+            message: 'Invalid parameter(s): per_page'
+            data:
+              status: 400
+              params:
+                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+    Unauthorized:
+      description: The route exists but is not readable anonymously. Verified live (HTTP 401) on /wp/v2/block-types
+        and the wp-abilities/v1 routes.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_forbidden
+            message: Sorry, you are not allowed to do that.
+            data:
+              status: 401
+  schemas:
+    RenderedText:
+      type: object
+      description: WordPress rendered-text object.
+      properties:
+        rendered:
+          type: string
+      required:
+      - rendered
+    Error:
+      type: object
+      description: The WordPress REST error envelope, verified live on this host. This is NOT RFC 9457
+        application/problem+json - it is served as application/json with a WordPress-specific shape.
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+            params:
+              type: object
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              additionalProperties: true
+          required:
+          - status
+      required:
+      - code
+      - message
+      - data
+    RootIndex:
+      type: object
+      description: The WordPress REST API root discovery document, verified live on 2026-08-08.
+      properties:
+        name:
+          type: string
+          description: 'Site name. Live value: Burger Singh.'
+        description:
+          type: string
+          description: 'Site tagline. Live value: Home of Desi Indian Burgers.'
+        url:
+          type: string
+          format: uri
+        home:
+          type: string
+          format: uri
+        gmt_offset:
+          type:
+          - number
+          - string
+          description: 'Live value: 5.5 (IST).'
+        timezone_string:
+          type: string
+        site_icon_url:
+          type: string
+          format: uri
+        namespaces:
+          type: array
+          items:
+            type: string
+          description: 'Live value: 12 namespaces including wp/v2, yoast/v1, oembed/1.0, contact-form-7/v1,
+            wp-abilities/v1.'
+        authentication:
+          type: object
+          additionalProperties: true
+          description: Live value declares application-passwords with its authorization endpoint.
+        routes:
+          type: object
+          additionalProperties: true
+          description: 'Route table keyed by route pattern. Live value: 200 routes.'
+        _links:
+          type: object
+          additionalProperties: true
+      required:
+      - name
+      - url
+      - namespaces
+      - routes
+    ContentType:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        description:
+          type: string
+        hierarchical:
+          type: boolean
+        taxonomies:
+          type: array
+          items:
+            type: string
+        supports:
+          type: object
+          additionalProperties: true
+        _links:
+          type: object
+          additionalProperties: true
+      required:
+      - slug
+      - rest_base
+    Taxonomy:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        description:
+          type: string
+        hierarchical:
+          type: boolean
+        types:
+          type: array
+          items:
+            type: string
+        _links:
+          type: object
+          additionalProperties: true
+      required:
+      - slug
+      - rest_base
+      - types
+    User:
+      type: object
+      description: A public author record as returned anonymously in view context.
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        url:
+          type: string
+        description:
+          type: string
+        link:
+          type: string
+          format: uri
+        slug:
+          type: string
+        avatar_urls:
+          type: object
+          additionalProperties:
+            type: string
+        meta:
+          type: object
+          additionalProperties: true
+        yoast_head:
+          type: string
+        yoast_head_json:
+          type: object
+          additionalProperties: true
+        _links:
+          type: object
+          additionalProperties: true
+      required:
+      - id
+      - name
+      - slug

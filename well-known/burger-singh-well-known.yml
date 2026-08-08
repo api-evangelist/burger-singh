@@ -1,0 +1,109 @@
+generated: '2026-08-08'
+method: probed
+source: live probes of the burgersinghonline.com discovery surface (2026-08-08)
+host: https://www.burgersinghonline.com
+summary: >-
+  Burger Singh publishes no /.well-known/ discovery documents. Every RFC 8615 path probed returned
+  the site's 404 page. The only machine-readable discovery documents on the host are the WordPress
+  REST root index, the Yoast sitemap index and an (empty) RSS feed. A control path
+  (/zzz-control-not-real) was probed alongside to confirm these are real 404s and not a soft-404
+  catch-all: the 404 body is byte-identical across all of them.
+documents:
+- path: /.well-known/security.txt
+  status: 404
+  file: null
+- path: /.well-known/openid-configuration
+  status: 404
+  file: null
+- path: /.well-known/oauth-authorization-server
+  status: 404
+  file: null
+- path: /.well-known/oauth-protected-resource
+  status: 404
+  file: null
+- path: /.well-known/api-catalog
+  status: 404
+  file: null
+- path: /.well-known/ai-plugin.json
+  status: 404
+  file: null
+- path: /.well-known/agent-card.json
+  status: 404
+  file: null
+- path: /.well-known/agent.json
+  status: 404
+  file: null
+- path: /llms.txt
+  status: 404
+  file: null
+- path: /openapi.json
+  status: 404
+  file: null
+- path: /openapi.yaml
+  status: 404
+  file: null
+- path: /swagger.json
+  status: 404
+  file: null
+- path: /api-docs
+  status: 404
+  file: null
+- path: /graphql
+  status: 404
+  file: null
+- path: /robots.txt
+  status: 200
+  content_type: text/plain
+  file: burger-singh-robots.txt
+- path: /sitemap.xml
+  status: 200
+  content_type: text/xml
+  file: null
+  note: >-
+    Yoast sitemap index; six child sitemaps (page, store_locator, inthenews, medialist, hotdeals,
+    category). Not saved verbatim - it is an index of URLs, regenerated continuously.
+- path: /feed/
+  status: 200
+  content_type: application/rss+xml
+  file: null
+  note: Valid RSS 2.0, zero items.
+- path: /wp-json/
+  status: 200
+  content_type: application/json
+  file: null
+  note: >-
+    The real discovery document on this host - 200 routes across 12 namespaces, with per-route
+    argument schemas. Captured as OpenAPI in openapi/burger-singh-discovery-api-openapi.yml rather
+    than saved verbatim (215 KB).
+control_probe:
+  path: /zzz-control-not-real
+  status: 404
+  note: >-
+    Used to establish the 404 baseline. Its response body is identical in length (97,524 bytes) to
+    every 404 above, which is what makes those 404s trustworthy.
+other_hosts_probed:
+- host: burgersingh.com
+  finding: >-
+    NOT the company site. A domain-parking lander - every path, including nonexistent ones, returns
+    HTTP 200 with a stub that redirects to /lander. It does serve /robots.txt and /llms.txt as
+    text/plain (with `Disallow-Training: /` and `LLM-Policy: /llms.txt`), but those are the parking
+    provider's boilerplate, not a Burger Singh publication, and are deliberately NOT credited to the
+    company or saved here.
+  probes:
+  - url: https://www.burgersingh.com/
+    status: 200
+  - url: https://www.burgersingh.com/llms.txt
+    status: 200
+  - url: https://www.burgersingh.com/zzz-not-real-control.txt
+    status: 200
+- host: api.burgersingh.com
+  finding: does not resolve (NXDOMAIN)
+- host: developer.burgersingh.com
+  finding: does not resolve (NXDOMAIN)
+- host: docs.burgersingh.com
+  finding: does not resolve (NXDOMAIN)
+- host: order.burgersingh.com
+  finding: does not resolve (NXDOMAIN)
+x-evidence:
+  fetched: '2026-08-08'
+  method: 'curl -L, browser User-Agent, redirects followed'

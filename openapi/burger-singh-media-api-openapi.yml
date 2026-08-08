@@ -1,0 +1,359 @@
+openapi: 3.1.0
+info:
+  title: Burger Singh Media API
+  version: wp/v2
+  summary: Public read surface of the burgersinghonline.com media library.
+  description: Anonymous read access to the media library behind burgersinghonline.com - burger and menu
+    photography, outlet imagery, franchise collateral and press assets, with their generated size variants
+    and direct source URLs. 576 attachments were live at the time of capture.
+  contact:
+    name: Burger Singh
+    url: https://www.burgersinghonline.com/feedback/
+  license:
+    name: Site content - all rights reserved, see Terms and Conditions
+    url: https://www.burgersinghonline.com/terms-and-conditions/
+  x-apis-io-provenance:
+    method: derived
+    source: https://www.burgersinghonline.com/wp-json/
+    derived_on: '2026-08-08'
+    note: 'Routes enumerated from the live wp-json discovery document; each operation below was probed
+      anonymously and returned HTTP 200 (X-WP-Total: 576). Schemas reflect the fields observed in live
+      responses on 2026-08-08.'
+servers:
+- url: https://www.burgersinghonline.com/wp-json
+  description: Production
+tags:
+- name: Media
+  description: Image and file attachments in the Burger Singh media library.
+paths:
+  /wp/v2/media:
+    get:
+      tags:
+      - Media
+      operationId: listMedia
+      summary: List media attachments
+      description: Returns a paginated collection of media attachments. Counts come back in X-WP-Total
+        / X-WP-TotalPages.
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - $ref: '#/components/parameters/search'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/orderby'
+      - $ref: '#/components/parameters/context'
+      - $ref: '#/components/parameters/fields'
+      - name: media_type
+        in: query
+        description: Limit results to attachments of a specific media type.
+        schema:
+          type: string
+          enum:
+          - image
+          - video
+          - text
+          - application
+          - audio
+          - file
+      - name: mime_type
+        in: query
+        description: Limit results to attachments of a specific MIME type.
+        schema:
+          type: string
+      - name: parent
+        in: query
+        description: Limit results to attachments attached to the given post IDs.
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: slug
+        in: query
+        description: Limit results to attachments with one of the given slugs.
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: A page of media attachments.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/XWPTotal'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/XWPTotalPages'
+            Link:
+              $ref: '#/components/headers/LinkPagination'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MediaItem'
+        '400':
+          $ref: '#/components/responses/InvalidParam'
+  /wp/v2/media/{id}:
+    get:
+      tags:
+      - Media
+      operationId: getMediaItem
+      summary: Get a media attachment
+      description: Returns a single media attachment by its numeric WordPress attachment ID.
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/context'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: The requested attachment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaItem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      description: Unique numeric identifier for the object.
+      schema:
+        type: integer
+    page:
+      name: page
+      in: query
+      description: Current page of the collection. Defaults to 1.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    perPage:
+      name: per_page
+      in: query
+      description: 'Maximum number of items returned. Verified live: values outside 1-100 return HTTP
+        400 rest_invalid_param.'
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    order:
+      name: order
+      in: query
+      description: Order sort attribute ascending or descending.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+    orderby:
+      name: orderby
+      in: query
+      description: Sort collection by object attribute.
+      schema:
+        type: string
+    context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines the fields present in the response.
+        Only view and embed are available anonymously.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        default: view
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated list of fields to limit the response to. Verified live.
+      schema:
+        type: string
+    embed:
+      name: _embed
+      in: query
+      description: Embed linked resources (author, featured media, terms) into the response.
+      schema:
+        type: boolean
+  headers:
+    XWPTotal:
+      description: Total number of items in the collection.
+      schema:
+        type: integer
+    XWPTotalPages:
+      description: Total number of pages in the collection at the current per_page.
+      schema:
+        type: integer
+    LinkPagination:
+      description: RFC 8288 Link header carrying next and prev pagination relations. Verified live on
+        /wp/v2/pages.
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: The requested object does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_post_invalid_id
+            message: Invalid post ID.
+            data:
+              status: 404
+    InvalidParam:
+      description: One or more query parameters failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_invalid_param
+            message: 'Invalid parameter(s): per_page'
+            data:
+              status: 400
+              params:
+                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+  schemas:
+    RenderedText:
+      type: object
+      description: WordPress rendered-text object.
+      properties:
+        rendered:
+          type: string
+      required:
+      - rendered
+    Error:
+      type: object
+      description: The WordPress REST error envelope, verified live on this host. This is NOT RFC 9457
+        application/problem+json - it is served as application/json with a WordPress-specific shape.
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+            params:
+              type: object
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              additionalProperties: true
+          required:
+          - status
+      required:
+      - code
+      - message
+      - data
+    MediaItem:
+      type: object
+      description: A WordPress media attachment as returned anonymously. Fields verified live on 2026-08-08.
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+          format: date-time
+        date_gmt:
+          type: string
+          format: date-time
+        guid:
+          $ref: '#/components/schemas/RenderedText'
+        modified:
+          type: string
+          format: date-time
+        modified_gmt:
+          type: string
+          format: date-time
+        slug:
+          type: string
+        status:
+          type: string
+        type:
+          type: string
+          const: attachment
+        link:
+          type: string
+          format: uri
+        title:
+          $ref: '#/components/schemas/RenderedText'
+        author:
+          type: integer
+        featured_media:
+          type: integer
+        comment_status:
+          type: string
+        ping_status:
+          type: string
+        template:
+          type: string
+        meta:
+          type: object
+          additionalProperties: true
+        class_list:
+          type: array
+          items:
+            type: string
+        categories:
+          type: array
+          items:
+            type: integer
+          description: Category term IDs. The category taxonomy is registered for attachments on this
+            host.
+        tags:
+          type: array
+          items:
+            type: integer
+        description:
+          $ref: '#/components/schemas/RenderedText'
+        caption:
+          $ref: '#/components/schemas/RenderedText'
+        alt_text:
+          type: string
+        media_type:
+          type: string
+          enum:
+          - image
+          - file
+        mime_type:
+          type: string
+        filename:
+          type: string
+        filesize:
+          type: integer
+        media_details:
+          type: object
+          additionalProperties: true
+          description: Width, height, file path and the generated size variants for image attachments.
+        post:
+          type:
+          - integer
+          - 'null'
+          description: ID of the post this attachment is attached to.
+        source_url:
+          type: string
+          format: uri
+          description: Direct URL to the original uploaded file.
+        _links:
+          type: object
+          additionalProperties: true
+      required:
+      - id
+      - slug
+      - type
+      - link
+      - source_url
+      - media_type
+      - mime_type

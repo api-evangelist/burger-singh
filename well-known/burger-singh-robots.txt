@@ -1,0 +1,22 @@
+User-agent: *
+User-agent: AdsBot-Google
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: SiteAuditBot
+Allow: /
+Disallow: /wp-admin/
+Disallow: /franchise-test-page/
+Disallow: /franchise-1/
+Disallow: /franchisee/
+Disallow: /franchise-new-demo/
+Noindex: /franchise-new-demo/
+Nofollow: /franchise-new-demo/
+
+# START YOAST BLOCK
+# ---------------------------
+User-agent: *
+Disallow:
+
+Sitemap: https://www.burgersinghonline.com/sitemap_index.xml
+# ---------------------------
+# END YOAST BLOCK

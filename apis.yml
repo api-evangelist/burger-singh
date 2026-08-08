@@ -1,10 +1,40 @@
 aid: burger-singh
 name: Burger Singh
-description: 'Burger Singh is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Burger Singh is an Indian quick-service restaurant chain founded in 2014 by Kabir Jeet Singh with
+  co-founders Nitin Rana and Rahul Seth, and operated by Tipping Mr Pink Private Limited out of
+  Gurugram, Haryana. It sells Indian-flavoured "craft" burgers - regional recipes built on Indian
+  spices and chutneys - alongside fries and sides, desserts and beverages, through a hybrid estate of
+  company-owned and franchised outlets that spans high-street, food-court, express and dine-in
+  formats across India and into the United Kingdom. The business grows primarily through franchising,
+  and its public web surface is organised around that motion: a menu, a store locator, franchise
+  investment brackets, property-partner and bulk-order intake, and a complaint and feedback channel.
+  Burger Singh is a restaurant operator rather than a software vendor and publishes no developer
+  program, no API documentation and no commercial or partner-facing API. The only machine-readable
+  interface it exposes is the WordPress REST content API behind its corporate site at
+  burgersinghonline.com, captured here for discovery purposes.
 url: https://raw.githubusercontent.com/api-evangelist/burger-singh/refs/heads/main/apis.yml
+accessModel:
+  pricing: none
+  onboarding: open
+  trial: false
+  try_now: true
+  public: true
+  label: Public read-only content API, no signup
+  confidence: high
+  source:
+  - authentication
+  generated: '2026-08-08'
+  method: probed
+  note: >-
+    Corrected from the mechanical derivation. The script read the application-passwords entry in the
+    root index and inferred a self-serve signup; there is none. Every operation documented in this
+    repo returned HTTP 200 to an anonymous request with no credential on 2026-08-08. Application
+    Passwords are an administrative site credential with no public issuance path.
+image: https://www.burgersinghonline.com/wp-content/uploads/2024/04/cropped-logo-v0.1-2.png
 x-type: company
 x-source: harvest:secondary-market
+x-secondary-market-listing: https://www.hiive.com/securities/burger-singh-stock
 x-tier: stub
 x-tier-reason: harvest
 specificationVersion: '0.20'
@@ -12,7 +42,176 @@ created: '2026-08-08'
 modified: '2026-08-08'
 tags:
 - Company
-apis: []
+- Restaurants
+- Quick Service Restaurant
+- Food and Beverage
+- Franchising
+- Consumer
+- India
+- Retail
+- Content
+- WordPress
+apis:
+- aid: burger-singh:burger-singh-pages-api
+  name: Burger Singh Pages API
+  description: >-
+    Public, unauthenticated read access to the site pages of burgersinghonline.com - Menu, Burgers,
+    Fries and Sides, Desserts, Beverages, Franchise, Property Partners, Bulk Order, Store Locator,
+    Hot Locations, About Us, Feedback, Complaint and Terms and Conditions - via the WordPress core
+    REST API. Verified live at 20 published pages.
+  humanURL: https://www.burgersinghonline.com/wp-json/
+  baseURL: https://www.burgersinghonline.com/wp-json
+  tags:
+  - Pages
+  - Content
+  - Menu
+  properties:
+  - type: OpenAPI
+    url: openapi/burger-singh-pages-api-openapi.yml
+  - type: Authentication
+    url: authentication/burger-singh-authentication.yml
+  - type: ErrorCatalog
+    url: errors/burger-singh-problem-types.yml
+  - type: Conventions
+    url: conventions/burger-singh-conventions.yml
+  - type: DataModel
+    url: data-model/burger-singh-data-model.yml
+  - type: Conformance
+    url: conformance/burger-singh-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/burger-singh-lifecycle.yml
+  - type: Overlay
+    url: overlays/burger-singh-pages-api-overlay.yaml
+- aid: burger-singh:burger-singh-media-api
+  name: Burger Singh Media API
+  description: >-
+    Public, unauthenticated read access to the media library behind burgersinghonline.com - burger
+    and menu photography, outlet imagery, franchise collateral and press assets with their generated
+    size variants and direct source URLs. Verified live at 576 attachments.
+  humanURL: https://www.burgersinghonline.com/wp-json/
+  baseURL: https://www.burgersinghonline.com/wp-json
+  tags:
+  - Media
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/burger-singh-media-api-openapi.yml
+  - type: Authentication
+    url: authentication/burger-singh-authentication.yml
+  - type: ErrorCatalog
+    url: errors/burger-singh-problem-types.yml
+  - type: Conventions
+    url: conventions/burger-singh-conventions.yml
+  - type: DataModel
+    url: data-model/burger-singh-data-model.yml
+  - type: Conformance
+    url: conformance/burger-singh-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/burger-singh-lifecycle.yml
+  - type: Overlay
+    url: overlays/burger-singh-media-api-overlay.yaml
+- aid: burger-singh:burger-singh-taxonomy-api
+  name: Burger Singh Taxonomy API
+  description: >-
+    Public, unauthenticated read access to the site taxonomy - the franchise investment brackets
+    (Less than 26 Lacs, 26 to 60 Lacs, 60 Lacs to 1 Crore), the store formats (Dine-in Only, Dine-in
+    + Take Away, Express Model, Food Court, High Street) and the deal and news classifications - via
+    the WordPress core REST API. Verified live at 13 category terms.
+  humanURL: https://www.burgersinghonline.com/wp-json/
+  baseURL: https://www.burgersinghonline.com/wp-json
+  tags:
+  - Taxonomy
+  - Franchising
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/burger-singh-taxonomy-api-openapi.yml
+  - type: Authentication
+    url: authentication/burger-singh-authentication.yml
+  - type: ErrorCatalog
+    url: errors/burger-singh-problem-types.yml
+  - type: Conventions
+    url: conventions/burger-singh-conventions.yml
+  - type: DataModel
+    url: data-model/burger-singh-data-model.yml
+  - type: Conformance
+    url: conformance/burger-singh-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/burger-singh-lifecycle.yml
+  - type: Overlay
+    url: overlays/burger-singh-taxonomy-api-overlay.yaml
+- aid: burger-singh:burger-singh-search-api
+  name: Burger Singh Search API
+  description: >-
+    Public, unauthenticated cross-content search over burgersinghonline.com, returning lightweight
+    id / title / url / type / subtype records with an embeddable link to the full object.
+  humanURL: https://www.burgersinghonline.com/wp-json/
+  baseURL: https://www.burgersinghonline.com/wp-json
+  tags:
+  - Search
+  - Content
+  properties:
+  - type: OpenAPI
+    url: openapi/burger-singh-search-api-openapi.yml
+  - type: Authentication
+    url: authentication/burger-singh-authentication.yml
+  - type: ErrorCatalog
+    url: errors/burger-singh-problem-types.yml
+  - type: Conventions
+    url: conventions/burger-singh-conventions.yml
+  - type: Conformance
+    url: conformance/burger-singh-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/burger-singh-lifecycle.yml
+  - type: Overlay
+    url: overlays/burger-singh-search-api-overlay.yaml
+- aid: burger-singh:burger-singh-discovery-api
+  name: Burger Singh Discovery API
+  description: >-
+    Public, unauthenticated site, content-type, taxonomy, status and author metadata - the
+    self-describing route index (200 routes across 12 namespaces) that makes the whole
+    burgersinghonline.com surface machine-readable.
+  humanURL: https://www.burgersinghonline.com/wp-json/
+  baseURL: https://www.burgersinghonline.com/wp-json
+  tags:
+  - Discovery
+  - Metadata
+  properties:
+  - type: OpenAPI
+    url: openapi/burger-singh-discovery-api-openapi.yml
+  - type: Authentication
+    url: authentication/burger-singh-authentication.yml
+  - type: ErrorCatalog
+    url: errors/burger-singh-problem-types.yml
+  - type: Conventions
+    url: conventions/burger-singh-conventions.yml
+  - type: Conformance
+    url: conformance/burger-singh-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/burger-singh-lifecycle.yml
+  - type: Overlay
+    url: overlays/burger-singh-discovery-api-overlay.yaml
+- aid: burger-singh:burger-singh-seo-api
+  name: Burger Singh SEO Metadata API
+  description: >-
+    Public Yoast SEO head endpoint returning the rendered SEO/head metadata and its schema.org
+    JSON-LD graph for any burgersinghonline.com URL.
+  humanURL: https://www.burgersinghonline.com/wp-json/
+  baseURL: https://www.burgersinghonline.com/wp-json
+  tags:
+  - SEO
+  - Metadata
+  properties:
+  - type: OpenAPI
+    url: openapi/burger-singh-seo-api-openapi.yml
+  - type: Authentication
+    url: authentication/burger-singh-authentication.yml
+  - type: ErrorCatalog
+    url: errors/burger-singh-problem-types.yml
+  - type: Conventions
+    url: conventions/burger-singh-conventions.yml
+  - type: Overlay
+    url: overlays/burger-singh-seo-api-overlay.yaml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +219,68 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://www.hiive.com/securities/burger-singh-stock
+  url: https://www.burgersinghonline.com/
+- type: About
+  url: https://www.burgersinghonline.com/about-us/
+- type: Support
+  url: https://www.burgersinghonline.com/feedback/
+- type: Contact
+  url: https://www.burgersinghonline.com/complaint/
+- type: TermsOfService
+  url: https://www.burgersinghonline.com/terms-and-conditions/
+- type: Twitter
+  url: https://twitter.com/BurgerSinghs
+- type: Facebook
+  url: https://www.facebook.com/BurgerSinghIndia
+- type: Instagram
+  url: https://www.instagram.com/burgersinghofficial/
+- type: Authentication
+  url: authentication/burger-singh-authentication.yml
+- type: ErrorCatalog
+  url: errors/burger-singh-problem-types.yml
+- type: Conventions
+  url: conventions/burger-singh-conventions.yml
+- type: DataModel
+  url: data-model/burger-singh-data-model.yml
+- type: Conformance
+  url: conformance/burger-singh-conformance.yml
+- type: Lifecycle
+  url: lifecycle/burger-singh-lifecycle.yml
+- type: WellKnown
+  url: well-known/burger-singh-well-known.yml
+- type: DomainSecurity
+  url: security/burger-singh-domain-security.yml
+- type: LLMsTxt
+  url: llms/burger-singh-llms.txt
+- type: MCPServer
+  url: mcp/burger-singh-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/burger-singh-tool-crosswalk.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgenticAccess
+  url: agentic-access/burger-singh-agentic-access.yml
+- type: Examples
+  url: examples/burger-singh-examples.yml
+x-enrichment:
+  date: '2026-08-08'
+  status: enriched
+  artifacts_added: 30
+  pass: local-v1
+x-coverage:
+  state: covered
+  reason: null
+  detail: >-
+    Burger Singh publishes no developer program, but a real machine-readable surface was found and
+    captured: the public WordPress REST API at https://www.burgersinghonline.com/wp-json/ (200
+    routes, 12 namespaces), verified anonymously readable and documented as six OpenAPI 3.1 specs.
+  evidence:
+  - url: https://www.burgersinghonline.com/wp-json/
+    status: 200
+  - url: https://www.burgersinghonline.com/wp-json/wp/v2/pages?per_page=1
+    status: 200
+  - url: https://www.burgersinghonline.com/.well-known/agent-card.json
+    status: 404
+  - url: https://www.burgersinghonline.com/llms.txt
+    status: 404
+  checked: '2026-08-08'

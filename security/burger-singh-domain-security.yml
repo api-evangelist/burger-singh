@@ -1,0 +1,15 @@
+generated: '2026-08-08'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: www.burgersinghonline.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Sep 19 15:04:42 2026 GMT
+  hsts: false
+domains:
+- domain: burgersinghonline.com
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: false

@@ -1,0 +1,343 @@
+openapi: 3.1.0
+info:
+  title: Burger Singh Taxonomy API
+  version: wp/v2
+  summary: Public read surface of the Burger Singh category and tag taxonomy.
+  description: Anonymous read access to the taxonomy terms behind burgersinghonline.com. On this host
+    the category taxonomy carries the franchise investment brackets (Less than 26 Lacs, 26 to 60 Lacs,
+    60 Lacs to 1 Crore), the store formats (Dine-in Only, Dine-in + Take Away, Express Model, Food Court,
+    High Street), and the deal and news classifications (Hot Deal, Regular Deal, Latest news). 13 category
+    terms were live at the time of capture; the post_tag taxonomy was empty.
+  contact:
+    name: Burger Singh
+    url: https://www.burgersinghonline.com/feedback/
+  license:
+    name: Site content - all rights reserved, see Terms and Conditions
+    url: https://www.burgersinghonline.com/terms-and-conditions/
+  x-apis-io-provenance:
+    method: derived
+    source: https://www.burgersinghonline.com/wp-json/
+    derived_on: '2026-08-08'
+    note: 'Routes enumerated from the live wp-json discovery document and the /wp/v2/taxonomies route;
+      each operation below was probed anonymously and returned HTTP 200 (categories X-WP-Total: 13, tags
+      X-WP-Total: 0). Term names above were read verbatim from the live collection on 2026-08-08.'
+servers:
+- url: https://www.burgersinghonline.com/wp-json
+  description: Production
+tags:
+- name: Taxonomy
+  description: Category and tag terms classifying Burger Singh franchise, deal and news content.
+paths:
+  /wp/v2/categories:
+    get:
+      tags:
+      - Taxonomy
+      operationId: listCategories
+      summary: List category terms
+      description: Returns a paginated collection of category terms with their object counts.
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - $ref: '#/components/parameters/search'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/orderby'
+      - $ref: '#/components/parameters/context'
+      - $ref: '#/components/parameters/fields'
+      - name: slug
+        in: query
+        description: Limit results to terms with one of the given slugs.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: parent
+        in: query
+        description: Limit results to terms with the given parent term ID.
+        schema:
+          type: integer
+      - name: hide_empty
+        in: query
+        description: Whether to hide terms not assigned to any object.
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: A page of category terms.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/XWPTotal'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/XWPTotalPages'
+            Link:
+              $ref: '#/components/headers/LinkPagination'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Term'
+        '400':
+          $ref: '#/components/responses/InvalidParam'
+  /wp/v2/categories/{id}:
+    get:
+      tags:
+      - Taxonomy
+      operationId: getCategory
+      summary: Get a category term
+      description: Returns a single category term by its numeric term ID.
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/context'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: The requested category term.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Term'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/tags:
+    get:
+      tags:
+      - Taxonomy
+      operationId: listTags
+      summary: List tag terms
+      description: 'Returns a paginated collection of post_tag terms. Verified live: this collection is
+        currently empty (X-WP-Total: 0).'
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - $ref: '#/components/parameters/search'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/orderby'
+      - $ref: '#/components/parameters/context'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: A page of tag terms.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/XWPTotal'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/XWPTotalPages'
+            Link:
+              $ref: '#/components/headers/LinkPagination'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Term'
+        '400':
+          $ref: '#/components/responses/InvalidParam'
+  /wp/v2/tags/{id}:
+    get:
+      tags:
+      - Taxonomy
+      operationId: getTag
+      summary: Get a tag term
+      description: Returns a single post_tag term by its numeric term ID.
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/context'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: The requested tag term.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Term'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      description: Unique numeric identifier for the object.
+      schema:
+        type: integer
+    page:
+      name: page
+      in: query
+      description: Current page of the collection. Defaults to 1.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    perPage:
+      name: per_page
+      in: query
+      description: 'Maximum number of items returned. Verified live: values outside 1-100 return HTTP
+        400 rest_invalid_param.'
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    order:
+      name: order
+      in: query
+      description: Order sort attribute ascending or descending.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+    orderby:
+      name: orderby
+      in: query
+      description: Sort collection by object attribute.
+      schema:
+        type: string
+    context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines the fields present in the response.
+        Only view and embed are available anonymously.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        default: view
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated list of fields to limit the response to. Verified live.
+      schema:
+        type: string
+    embed:
+      name: _embed
+      in: query
+      description: Embed linked resources (author, featured media, terms) into the response.
+      schema:
+        type: boolean
+  headers:
+    XWPTotal:
+      description: Total number of items in the collection.
+      schema:
+        type: integer
+    XWPTotalPages:
+      description: Total number of pages in the collection at the current per_page.
+      schema:
+        type: integer
+    LinkPagination:
+      description: RFC 8288 Link header carrying next and prev pagination relations. Verified live on
+        /wp/v2/pages.
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: The requested object does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_post_invalid_id
+            message: Invalid post ID.
+            data:
+              status: 404
+    InvalidParam:
+      description: One or more query parameters failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_invalid_param
+            message: 'Invalid parameter(s): per_page'
+            data:
+              status: 400
+              params:
+                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+  schemas:
+    RenderedText:
+      type: object
+      description: WordPress rendered-text object.
+      properties:
+        rendered:
+          type: string
+      required:
+      - rendered
+    Error:
+      type: object
+      description: The WordPress REST error envelope, verified live on this host. This is NOT RFC 9457
+        application/problem+json - it is served as application/json with a WordPress-specific shape.
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+            params:
+              type: object
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              additionalProperties: true
+          required:
+          - status
+      required:
+      - code
+      - message
+      - data
+    Term:
+      type: object
+      description: A term in the category taxonomy. On this host the category taxonomy is used to classify
+        franchise investment brackets, store formats, deals and news items.
+      properties:
+        id:
+          type: integer
+        count:
+          type: integer
+          description: Number of objects assigned to this term.
+        description:
+          type: string
+        link:
+          type: string
+          format: uri
+        name:
+          type: string
+        slug:
+          type: string
+        taxonomy:
+          type: string
+          enum:
+          - category
+          - post_tag
+        parent:
+          type: integer
+        meta:
+          type: object
+          additionalProperties: true
+        yoast_head:
+          type: string
+        yoast_head_json:
+          type: object
+          additionalProperties: true
+        _links:
+          type: object
+          additionalProperties: true
+      required:
+      - id
+      - name
+      - slug
+      - taxonomy

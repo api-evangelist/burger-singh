@@ -1,0 +1,77 @@
+generated: '2026-08-08'
+method: probed
+source: live anonymous probes of https://www.burgersinghonline.com (2026-08-08)
+summary: >-
+  Burger Singh publishes no API lifecycle commitments of any kind - no versioning policy, no
+  deprecation policy, no changelog, no status page and no SLA. The version of the surface described
+  in this repo is the WordPress REST namespace, which moves with the platform and its plugins rather
+  than with any published Burger Singh policy. No StatusPage or Deprecation pointer is emitted.
+versioning:
+  scheme: uri-path namespace
+  current: wp/v2
+  policy_url: null
+  detail: >-
+    Versioning is inherited from WordPress core and the installed plugins, not owned by Burger Singh.
+    Namespaces live on this host on 2026-08-08: wp/v2, yoast/v1, oembed/1.0, contact-form-7/v1,
+    post-smtp/v1, post-smtp/v2, psd/v1, adsagent/v1, advancedformintegration, wp-site-health/v1,
+    wp-block-editor/v1, wp-abilities/v1. A plugin update can add, change or remove a namespace with
+    no notice to consumers.
+  upstream_reference: https://developer.wordpress.org/rest-api/
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  evidence: >-
+    No Sunset or Deprecation response header was observed (RFC 8594), and no deprecation policy page
+    exists. No operation in any openapi/ file in this repo is marked deprecated.
+sla:
+  url: null
+  uptime_target: null
+status_page:
+  url: null
+  evidence: >-
+    No status subdomain or status page found. status.burgersinghonline.com and
+    status.burgersingh.com do not resolve.
+changelog:
+  url: null
+  evidence: >-
+    No changelog, release notes or "what's new" page. The site's own RSS feed at /feed/ is a valid
+    RSS 2.0 document but carries zero items, and /wp/v2/posts returns X-WP-Total: 0.
+freshness_signals:
+  rss_last_build_date: '2025-08-11T09:53:23+00:00'
+  sitemap_lastmod:
+    page: '2025-07-23T05:41:31+00:00'
+    inthenews: '2025-08-11T09:53:23+00:00'
+    category: '2025-08-11T09:53:23+00:00'
+    hotdeals: '2024-12-11T12:04:29+00:00'
+    medialist: '2023-08-16T08:11:09+00:00'
+    store_locator: '2022-08-09T12:25:35+00:00'
+  detail: >-
+    The most recent content change anywhere on the site is 2025-08-11, roughly a year before this
+    capture. The outlet estate sitemap has not changed since 2022 while the company reports growth
+    from that period, so the published store data should be treated as stale.
+platform:
+  stack: WordPress 7.0.3 on PHP 8.4.19, LiteSpeed, Hostinger (hPanel)
+  seo_plugin: Yoast SEO 26.6
+  evidence: >-
+    x-powered-by, server, platform and panel response headers; generator element in /feed/; Yoast
+    version string in /yoast/v1/get_head output.
+  note: >-
+    Recorded because on this surface the platform's release train IS the API's release train.
+deprecated_operations: []
+domain_note: >-
+  burgersingh.com - the shorter domain matching the brand name - is NOT the company site. It resolves
+  to a domain-parking lander (every path returns 200 with a redirect stub to /lander, including
+  paths that do not exist). The live corporate site is burgersinghonline.com. Recorded so a future
+  round does not re-probe the parked host and credit its parking-provider robots.txt/llms.txt to the
+  company.
+x-evidence:
+  fetched: '2026-08-08'
+  probes:
+  - url: https://www.burgersinghonline.com/sitemap_index.xml
+    http_status: 200
+  - url: https://www.burgersinghonline.com/feed/
+    http_status: 200
+  - url: https://www.burgersinghonline.com/wp-json/wp/v2/posts?per_page=1
+    http_status: 200
+    x_wp_total: 0

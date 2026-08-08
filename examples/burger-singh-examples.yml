@@ -1,0 +1,224 @@
+generated: '2026-08-08'
+method: probed
+source: live anonymous requests to https://www.burgersinghonline.com/wp-json/ (2026-08-08)
+summary: >-
+  Real request/response examples captured from the live WordPress REST surface behind
+  burgersinghonline.com. Every payload below is verbatim (field-trimmed with _fields where noted,
+  never edited) - nothing is synthesised. These bind the derived openapi/ specs to observed reality.
+examples:
+- name: list-site-pages
+  operation: openapi/burger-singh-pages-api-openapi.yml#listPages
+  request:
+    method: GET
+    url: >-
+      https://www.burgersinghonline.com/wp-json/wp/v2/pages?per_page=2&orderby=menu_order&order=asc&_fields=id,date,slug,link,title,status,type,parent,menu_order,author,featured_media
+    headers: {}
+  response:
+    status: 200
+    headers:
+      content-type: application/json; charset=UTF-8
+      x-wp-total: '20'
+      x-wp-totalpages: '10'
+      x-robots-tag: noindex
+      access-control-expose-headers: X-WP-Total, X-WP-TotalPages, Link
+    body:
+    - id: 10
+      date: '2022-07-01T05:59:57'
+      slug: home
+      status: publish
+      type: page
+      link: https://www.burgersinghonline.com/home/
+      title:
+        rendered: Home
+      author: 1
+      featured_media: 0
+      parent: 0
+      menu_order: 0
+    - id: 12
+      date: '2022-07-01T06:14:27'
+      slug: feedback
+      status: publish
+      type: page
+      link: https://www.burgersinghonline.com/feedback/
+      title:
+        rendered: Feedback
+      author: 1
+      featured_media: 0
+      parent: 0
+      menu_order: 0
+  note: >-
+    Trimmed with _fields. The untrimmed record also carries content.rendered, excerpt, guid,
+    modified, template, meta, class_list, yoast_head, yoast_head_json and _links.
+- name: list-media
+  operation: openapi/burger-singh-media-api-openapi.yml#listMedia
+  request:
+    method: GET
+    url: >-
+      https://www.burgersinghonline.com/wp-json/wp/v2/media?per_page=1&_fields=id,slug,link,title,media_type,mime_type,source_url,alt_text,filesize,date
+    headers: {}
+  response:
+    status: 200
+    headers:
+      content-type: application/json; charset=UTF-8
+      x-wp-total: '576'
+      x-wp-totalpages: '576'
+    body:
+    - id: 34202
+      date: '2026-07-30T12:10:19'
+      slug: website_menu_back
+      link: https://www.burgersinghonline.com/website_menu_back/
+      title:
+        rendered: Website_Menu_BACK
+      alt_text: ''
+      media_type: image
+      mime_type: image/jpeg
+      source_url: https://www.burgersinghonline.com/wp-content/uploads/2026/07/Website_Menu_BACK.jpg
+      filesize: 611210
+  note: >-
+    The newest attachment on the host at capture time is the back of the printed menu board, dated
+    2026-07-30 - the media library is the freshest thing on this site.
+- name: list-categories
+  operation: openapi/burger-singh-taxonomy-api-openapi.yml#listCategories
+  request:
+    method: GET
+    url: >-
+      https://www.burgersinghonline.com/wp-json/wp/v2/categories?per_page=20&_fields=id,slug,name,count
+    headers: {}
+  response:
+    status: 200
+    headers:
+      content-type: application/json; charset=UTF-8
+      x-wp-total: '13'
+    body:
+    - {id: 3, count: 14, name: 26 to 60 Lacs, slug: 26-to-60-lacs}
+    - {id: 4, count: 2, name: 60 Lacs to 1 Crore, slug: 60-lacs-to-1-crore}
+    - {id: 5, count: 0, name: Dine-in + Take Away, slug: dine-in-take-away}
+    - {id: 6, count: 0, name: Dine-in Only, slug: dine-in-only}
+    - {id: 7, count: 0, name: Express Model, slug: express-model}
+    - {id: 8, count: 3, name: Food Court, slug: food-court}
+    - {id: 14, count: 1, name: Future Post, slug: future-post}
+    - {id: 9, count: 13, name: High Street, slug: high-street}
+    - {id: 10, count: 16, name: Hot Deal, slug: hot-deal}
+    - {id: 13, count: 3, name: Latest news, slug: latest_news}
+    - {id: 11, count: 0, name: Less than 26 Lacs, slug: less-than-26-lacs}
+    - {id: 12, count: 0, name: Regular Deal, slug: regular-deal}
+    - {id: 1, count: 0, name: Uncategorized, slug: uncategorized}
+  note: >-
+    The full live taxonomy, verbatim. The non-zero counts point at objects in the hotdeals and
+    inthenews custom types, which are NOT REST-exposed - so the terms are readable but the things
+    they classify are not.
+- name: search-content
+  operation: openapi/burger-singh-search-api-openapi.yml#searchContent
+  request:
+    method: GET
+    url: https://www.burgersinghonline.com/wp-json/wp/v2/search?search=franchise&per_page=3
+    headers: {}
+  response:
+    status: 200
+    headers:
+      content-type: application/json; charset=UTF-8
+    body:
+    - {id: 28062, title: co-invest-franchise-marathi, url: 'https://www.burgersinghonline.com/co-invest-franchise-marathi/', type: post, subtype: page}
+    - {id: 28059, title: co-invest-franchise-kannada, url: 'https://www.burgersinghonline.com/co-invest-franchise-kannada/', type: post, subtype: page}
+    - {id: 28056, title: co-invest-franchise-gujarati, url: 'https://www.burgersinghonline.com/co-invest-franchise-gujarati/', type: post, subtype: page}
+  note: _links omitted for length; each result carries self/about/collection relations.
+- name: get-root-index
+  operation: openapi/burger-singh-discovery-api-openapi.yml#getRootIndex
+  request:
+    method: GET
+    url: https://www.burgersinghonline.com/wp-json/
+    headers: {}
+  response:
+    status: 200
+    headers:
+      content-type: application/json; charset=UTF-8
+    body:
+      name: Burger Singh
+      description: Home of Desi Indian Burgers
+      url: https://www.burgersinghonline.com
+      home: https://www.burgersinghonline.com
+      gmt_offset: '5.5'
+      site_icon_url: https://www.burgersinghonline.com/wp-content/uploads/2024/04/cropped-logo-v0.1-2.png
+      namespaces: [oembed/1.0, post-smtp/v1, post-smtp/v2, psd/v1, advancedformintegration,
+        contact-form-7/v1, adsagent/v1, yoast/v1, wp/v2, wp-site-health/v1, wp-block-editor/v1,
+        wp-abilities/v1]
+      authentication:
+        application-passwords:
+          endpoints:
+            authorization: https://www.burgersinghonline.com/wp-admin/authorize-application.php
+  note: >-
+    `routes` omitted for length - the live document carries 200 routes with per-route argument
+    schemas and is 215 KB.
+- name: get-seo-head
+  operation: openapi/burger-singh-seo-api-openapi.yml#getSeoHead
+  request:
+    method: GET
+    url: https://www.burgersinghonline.com/wp-json/yoast/v1/get_head?url=https://www.burgersinghonline.com/menu/
+    headers: {}
+  response:
+    status: 200
+    headers:
+      content-type: application/json; charset=UTF-8
+    body:
+      json:
+        title: Menu - Burger Singh
+        canonical: https://www.burgersinghonline.com/menu/
+        og_locale: en_US
+        og_type: article
+        og_site_name: Burger Singh
+        twitter_card: summary_large_image
+        schema:
+          '@graph':
+          - '@type': WebPage
+            '@id': https://www.burgersinghonline.com/menu/
+            url: https://www.burgersinghonline.com/menu/
+            name: Menu - Burger Singh
+            isPartOf:
+              '@id': https://www.burgersinghonline.com/#website
+            datePublished: '2022-07-01T06:40:55+00:00'
+            inLanguage: en-US
+            potentialAction:
+            - '@type': ReadAction
+              target: [https://www.burgersinghonline.com/menu/]
+  note: >-
+    `html` (the rendered head markup) and the remaining @graph nodes omitted for length. Yoast SEO
+    26.6 per the generator comment in the html field.
+error_examples:
+- name: invalid-per-page
+  operation: openapi/burger-singh-pages-api-openapi.yml#listPages
+  request:
+    method: GET
+    url: https://www.burgersinghonline.com/wp-json/wp/v2/pages?per_page=999
+  response:
+    status: 400
+    body:
+      code: rest_invalid_param
+      message: 'Invalid parameter(s): per_page'
+      data:
+        status: 400
+        params:
+          per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+- name: unknown-page-id
+  operation: openapi/burger-singh-pages-api-openapi.yml#getPage
+  request:
+    method: GET
+    url: https://www.burgersinghonline.com/wp-json/wp/v2/pages/999999
+  response:
+    status: 404
+    body:
+      code: rest_post_invalid_id
+      message: Invalid post ID.
+      data:
+        status: 404
+- name: gated-abilities-route
+  operation: authentication/burger-singh-authentication.yml
+  request:
+    method: GET
+    url: https://www.burgersinghonline.com/wp-json/wp-abilities/v1/abilities
+  response:
+    status: 401
+    body:
+      code: rest_forbidden
+      message: Sorry, you are not allowed to do that.
+      data:
+        status: 401

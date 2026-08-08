@@ -1,0 +1,116 @@
+generated: '2026-08-08'
+method: probed
+source: live anonymous probes of https://www.burgersinghonline.com/wp-json/ (2026-08-08)
+summary:
+  types:
+  - none
+  - cookie
+  - http-basic
+  api_key_in: []
+  oauth2_flows: []
+  notes: >-
+    Burger Singh publishes no developer program and no product API. Its only machine-readable
+    surface is the platform-provided WordPress REST API at /wp-json/ behind burgersinghonline.com,
+    and the read half of that surface is fully public: every operation documented in this repo's
+    openapi/ specs was verified to return HTTP 200 with JSON to an anonymous request carrying no
+    credentials of any kind. There is no API key, no OAuth, no signup, and no rate-limit or quota
+    signalling was observed. Unlike a default WordPress install the root index does advertise one
+    authentication method - `application-passwords`, with its authorization endpoint at
+    /wp-admin/authorize-application.php - but that is an administrative site credential issued to a
+    logged-in WordPress user, not a public developer credential, and there is no self-serve path to
+    obtain one. Write operations (POST/PUT/PATCH/DELETE) are registered on the same routes but
+    reject anonymous callers; they require a logged-in WordPress session cookie plus an X-WP-Nonce
+    header, or an Application Password over HTTP Basic. Those write operations are deliberately NOT
+    documented in the openapi/ specs, which describe only the anonymously reachable read surface.
+schemes:
+- name: public-read
+  type: none
+  description: >-
+    Anonymous public read access to the WordPress content API - pages, media, categories, tags,
+    search, public authors, the Yoast SEO head endpoint, and the type/taxonomy/status registries.
+  evidence: >-
+    GET /wp-json/wp/v2/pages?per_page=1 returned 200 with page JSON and X-WP-Total: 20; the same
+    anonymous request pattern returned 200 on media (X-WP-Total: 576), categories (13), tags (0),
+    comments (0), search, users (1), types, taxonomies, statuses and yoast/v1/get_head.
+- name: wordpress-cookie-nonce
+  type: cookie
+  in: cookie
+  description: >-
+    WordPress core cookie authentication paired with an X-WP-Nonce request header, required for the
+    write half of the same routes and for the administrative read routes. Not a public developer
+    credential - it belongs to a logged-in site user.
+  evidence: >-
+    Access-Control-Allow-Headers on /wp-json/wp/v2/pages advertises `Authorization, X-WP-Nonce,
+    Content-Disposition, Content-MD5, Content-Type`. Anonymous GETs against the administrative
+    routes returned 401 (see gated_surface below).
+- name: application-passwords
+  type: http
+  scheme: basic
+  description: >-
+    WordPress Application Passwords over HTTP Basic, declared in the root index `authentication`
+    object. Issued interactively to an existing WordPress user at the authorization endpoint below;
+    there is no public registration or self-serve issuance.
+  authorization_endpoint: https://www.burgersinghonline.com/wp-admin/authorize-application.php
+  evidence: >-
+    The live root index at /wp-json/ returns
+    {"authentication":{"application-passwords":{"endpoints":{"authorization":"https://www.burgersinghonline.com/wp-admin/authorize-application.php"}}}}.
+gated_surface:
+  description: >-
+    Routes present in the live route table but not anonymously readable. Recorded so the
+    public/private split of this surface is explicit rather than inferred. Every status and code
+    below was observed on 2026-08-08.
+  routes:
+  - path: /wp/v2/settings
+    status: 401
+    code: rest_forbidden
+  - path: /wp/v2/themes
+    status: 401
+    code: rest_cannot_view_themes
+  - path: /wp/v2/plugins
+    status: 401
+    code: rest_cannot_view_plugins
+  - path: /wp/v2/menus
+    status: 401
+    code: rest_cannot_view
+  - path: /wp/v2/block-types
+    status: 401
+    code: rest_block_type_cannot_view
+  - path: /wp/v2/templates
+    status: 401
+    code: rest_cannot_manage_templates
+  - path: /wp/v2/pages/{id}/revisions
+    status: 401
+    code: rest_cannot_read
+  - path: /wp-abilities/v1/abilities
+    status: 401
+    code: rest_forbidden
+    note: >-
+      The WordPress Abilities API - the agent-facing capability registry - is registered on this
+      host but is entirely credentialed. No ability names, descriptions or input schemas are
+      readable anonymously, so none are recorded in this repo.
+  - path: /wp-site-health/v1/tests/https-status
+    status: 401
+    code: rest_forbidden
+  - path: /psd/v1/get-logs
+    status: 401
+    code: rest_forbidden
+  - path: /contact-form-7/v1/contact-forms
+    status: 403
+    code: wpcf7_forbidden
+  - path: /post-smtp/v1/get-logs
+    status: 400
+    code: 'Auth token missing.'
+    note: >-
+      Plugin route with a non-WordPress error envelope - returns
+      {"success":false,"data":{"error":"Auth token missing."}} rather than the core code/message/data
+      shape.
+docs: https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/
+x-evidence:
+  fetched: '2026-08-08'
+  host: https://www.burgersinghonline.com
+  root_index: https://www.burgersinghonline.com/wp-json/
+  http_status: 200
+  namespaces: 12
+  routes_advertised: 200
+  authentication_field:
+  - application-passwords

@@ -1,0 +1,142 @@
+generated: '2026-08-08'
+method: derived
+source: mcp/burger-singh-mcp.yml + openapi/burger-singh-*-openapi.yml
+summary: >-
+  Binds every candidate MCP tool to its backing OpenAPI operation so each tool inherits a REAL input
+  schema - that operation's `parameters` block - instead of a guessed one. Confidence is `high` on
+  every row for an unusual reason: the tool list was derived FROM the operations, one per
+  operationId, so the binding is definitional rather than inferred. There are no MCP-only and no
+  REST-only rows: the two surfaces are the same fifteen operations by construction. Recorded anyway
+  because the shape is what makes the tool a first-class discovery unit, and because the divergence
+  sections are the honest place to say "none, and here is why".
+surfaces:
+  openapi:
+    files:
+    - openapi/burger-singh-pages-api-openapi.yml
+    - openapi/burger-singh-media-api-openapi.yml
+    - openapi/burger-singh-taxonomy-api-openapi.yml
+    - openapi/burger-singh-search-api-openapi.yml
+    - openapi/burger-singh-discovery-api-openapi.yml
+    - openapi/burger-singh-seo-api-openapi.yml
+    gated: false
+    note: >-
+      Derived by API Evangelist from the live route index at
+      https://www.burgersinghonline.com/wp-json/; every operation verified anonymously readable.
+      Not published by the provider.
+  graphql:
+    endpoint: null
+    gated: null
+    note: >-
+      No GraphQL surface. https://www.burgersinghonline.com/graphql returned 404 and no WPGraphQL
+      namespace appears in the 200-route index.
+  mcp:
+    url: null
+    gated: null
+    note: >-
+      No MCP server published by Burger Singh; tools/list could not be called because there is no
+      endpoint to call. Tool list is a candidate derived from REST.
+  wp_abilities:
+    endpoint: https://www.burgersinghonline.com/wp-json/wp-abilities/v1/abilities
+    gated: true
+    note: >-
+      The WordPress Abilities API is registered on this host but returns 401 rest_forbidden
+      anonymously. It is the one agent-shaped registry present, and it is entirely credentialed - no
+      ability can be crosswalked. Listed as a surface so a future authenticated round knows where to
+      look, not as a source of any row below.
+crosswalk:
+- tool: list_pages
+  category: content
+  rest: [listPages]
+  binding: rest
+  confidence: high
+- tool: get_page
+  category: content
+  rest: [getPage]
+  binding: rest
+  confidence: high
+- tool: list_media
+  category: media
+  rest: [listMedia]
+  binding: rest
+  confidence: high
+- tool: get_media_item
+  category: media
+  rest: [getMediaItem]
+  binding: rest
+  confidence: high
+- tool: list_categories
+  category: taxonomy
+  rest: [listCategories]
+  binding: rest
+  confidence: high
+- tool: get_category
+  category: taxonomy
+  rest: [getCategory]
+  binding: rest
+  confidence: high
+- tool: list_tags
+  category: taxonomy
+  rest: [listTags]
+  binding: rest
+  confidence: high
+  note: Backing collection is empty on this host (X-WP-Total 0).
+- tool: get_tag
+  category: taxonomy
+  rest: [getTag]
+  binding: rest
+  confidence: high
+  note: No term exists to dereference on this host.
+- tool: search_content
+  category: search
+  rest: [searchContent]
+  binding: rest
+  confidence: high
+- tool: get_root_index
+  category: discovery
+  rest: [getRootIndex]
+  binding: rest
+  confidence: high
+- tool: list_types
+  category: discovery
+  rest: [listTypes]
+  binding: rest
+  confidence: high
+- tool: list_taxonomies
+  category: discovery
+  rest: [listTaxonomies]
+  binding: rest
+  confidence: high
+- tool: list_statuses
+  category: discovery
+  rest: [listStatuses]
+  binding: rest
+  confidence: high
+- tool: list_users
+  category: discovery
+  rest: [listUsers]
+  binding: rest
+  confidence: high
+- tool: get_seo_head
+  category: metadata
+  rest: [getSeoHead]
+  binding: rest
+  confidence: high
+mcp_only: []
+rest_only: []
+divergence_note: >-
+  Zero divergence, by construction rather than by design: there is only one surface here, and both
+  columns are projections of it. The real divergence on this provider is between what the CMS
+  exposes and what the business publishes - the outlet estate, menu items, prices, deals and press
+  are all present on the website and absent from every machine-readable surface. See the
+  `unreachable_entities` block in data-model/burger-singh-data-model.yml and `not_offered` in
+  mcp/burger-singh-mcp.yml.
+coverage:
+  tools_named: 15
+  tools_bound: 15
+  mcp_only: 0
+  rest_operations_total: 15
+  rest_operations_with_tool: 15
+  binding_rate: 1.0
+x-evidence:
+  fetched: '2026-08-08'
+  host: https://www.burgersinghonline.com

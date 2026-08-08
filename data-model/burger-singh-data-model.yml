@@ -1,0 +1,143 @@
+generated: '2026-08-08'
+method: derived
+source: >-
+  openapi/burger-singh-pages-api-openapi.yml, openapi/burger-singh-media-api-openapi.yml,
+  openapi/burger-singh-taxonomy-api-openapi.yml, openapi/burger-singh-discovery-api-openapi.yml
+note: >-
+  Entity graph derived from the id-reference fields and _links relations observed on live responses
+  from the WordPress REST surface behind burgersinghonline.com. Identifiers are plain integers -
+  this platform uses no prefixed or typed ids.
+identifiers:
+  style: integer
+  prefixed: false
+  scope: >-
+    Page, media and author ids share one wp_posts/wp_users id space per object family; term ids are
+    a separate space. An id is only meaningful together with its collection.
+entities:
+- name: Page
+  collection: /wp/v2/pages
+  count_observed: 20
+  schema: openapi/burger-singh-pages-api-openapi.yml#/components/schemas/Page
+  description: >-
+    A site page. On this host the set is the menu family (Menu, Burgers, Fries and Sides, Desserts,
+    Beverages), the franchise family (Franchise, Property Partners, Hot Locations, Bulk Order and
+    the Gujarati/Kannada/Marathi co-invest translations), the estate pages (Store Locator, Stores
+    List), the service pages (Feedback, Complaint) and the legal page (Terms and Conditions).
+- name: MediaItem
+  collection: /wp/v2/media
+  count_observed: 576
+  schema: openapi/burger-singh-media-api-openapi.yml#/components/schemas/MediaItem
+  description: An uploaded attachment with its generated size variants and a direct source_url.
+- name: Term
+  collection: /wp/v2/categories, /wp/v2/tags
+  count_observed: 13
+  schema: openapi/burger-singh-taxonomy-api-openapi.yml#/components/schemas/Term
+  description: >-
+    A taxonomy term. The category taxonomy on this host is not editorial - it encodes the franchise
+    offer: investment brackets and store formats.
+- name: User
+  collection: /wp/v2/users
+  count_observed: 1
+  schema: openapi/burger-singh-discovery-api-openapi.yml#/components/schemas/User
+  description: A public author record. One record ("burgersingh") on this host.
+- name: ContentType
+  collection: /wp/v2/types
+  schema: openapi/burger-singh-discovery-api-openapi.yml#/components/schemas/ContentType
+  description: Registry entry describing a REST-exposed content type.
+- name: Taxonomy
+  collection: /wp/v2/taxonomies
+  schema: openapi/burger-singh-discovery-api-openapi.yml#/components/schemas/Taxonomy
+  description: Registry entry describing a REST-exposed taxonomy and the types it applies to.
+- name: SearchResult
+  collection: /wp/v2/search
+  schema: openapi/burger-singh-search-api-openapi.yml#/components/schemas/SearchResult
+  description: >-
+    A projection, not a stored entity - id + subtype together dereference to the real object.
+relationships:
+- from: Page
+  to: User
+  kind: belongs_to
+  via: author
+  evidence: Page.author is a /wp/v2/users id; _links.author carries the dereference URL.
+- from: Page
+  to: MediaItem
+  kind: has_one
+  via: featured_media
+  evidence: Page.featured_media is a /wp/v2/media id (0 when unset).
+- from: Page
+  to: Page
+  kind: belongs_to
+  via: parent
+  evidence: Page.parent is a /wp/v2/pages id (0 for a top-level page).
+- from: Page
+  to: ContentType
+  kind: belongs_to
+  via: type
+  evidence: _links.about points at /wp/v2/types/page.
+- from: MediaItem
+  to: Page
+  kind: belongs_to
+  via: post
+  evidence: MediaItem.post is the id of the object the attachment is attached to, or null.
+- from: MediaItem
+  to: Term
+  kind: has_many
+  via: categories
+  evidence: >-
+    The category taxonomy is registered for the attachment type on this host (verified via
+    /wp/v2/taxonomies), and MediaItem carries a categories array of term ids.
+- from: MediaItem
+  to: Term
+  kind: has_many
+  via: tags
+  evidence: MediaItem carries a tags array of post_tag term ids (empty on this host).
+- from: MediaItem
+  to: User
+  kind: belongs_to
+  via: author
+  evidence: MediaItem.author is a /wp/v2/users id.
+- from: Term
+  to: Term
+  kind: belongs_to
+  via: parent
+  evidence: Term.parent is a category term id (0 at the root). All 13 live terms are at the root.
+- from: Term
+  to: Taxonomy
+  kind: belongs_to
+  via: taxonomy
+  evidence: Term.taxonomy is a taxonomy slug resolvable at /wp/v2/taxonomies.
+- from: SearchResult
+  to: Page
+  kind: has_one
+  via: id + subtype
+  evidence: _links.self points at /wp/v2/pages/{id} for subtype=page.
+- from: Taxonomy
+  to: ContentType
+  kind: has_many
+  via: types
+  evidence: >-
+    /wp/v2/taxonomies reports category applies to post, inthenews, hotdeals and attachment; post_tag
+    applies to post and attachment.
+unreachable_entities:
+- name: store_locator
+  reason: >-
+    Registered as a custom post type (it has its own Yoast sitemap at /store_locator-sitemap.xml)
+    but NOT exposed to REST - GET /wp/v2/store_locator returns 404 rest_no_route. The outlet estate
+    is therefore not machine-readable through this API.
+- name: inthenews
+  reason: >-
+    Custom post type carrying press coverage. Appears in /wp/v2/taxonomies as a type the category
+    taxonomy applies to, and has its own sitemap, but is not REST-exposed (404 rest_no_route).
+- name: hotdeals
+  reason: Custom post type carrying promotional deals. Not REST-exposed (404 rest_no_route).
+- name: medialist
+  reason: Custom post type with its own sitemap. Not REST-exposed (404 rest_no_route).
+note_on_gap: >-
+  The four business-meaningful custom types above - outlets, press, deals, media list - are exactly
+  the content an integrator or agent would want, and they are the only content NOT reachable through
+  the API. Registering them with show_in_rest would make the estate and the offer machine-readable
+  without publishing anything new.
+render: null
+x-evidence:
+  fetched: '2026-08-08'
+  host: https://www.burgersinghonline.com

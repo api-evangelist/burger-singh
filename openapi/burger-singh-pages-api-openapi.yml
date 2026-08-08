@@ -1,0 +1,335 @@
+openapi: 3.1.0
+info:
+  title: Burger Singh Pages API
+  version: wp/v2
+  summary: Public read surface of the burgersinghonline.com site pages.
+  description: The page content type behind burgersinghonline.com - Menu, Burgers, Fries and Sides, Desserts,
+    Beverages, Franchise, Property Partners, Bulk Order, Store Locator, Hot Locations, About Us, Feedback,
+    Complaint and Terms and Conditions - exposed anonymously through the WordPress core REST API. 20 pages
+    were live at the time of capture. Write operations on these routes require authentication and are
+    not documented here.
+  contact:
+    name: Burger Singh
+    url: https://www.burgersinghonline.com/feedback/
+  license:
+    name: Site content - all rights reserved, see Terms and Conditions
+    url: https://www.burgersinghonline.com/terms-and-conditions/
+  x-apis-io-provenance:
+    method: derived
+    source: https://www.burgersinghonline.com/wp-json/
+    derived_on: '2026-08-08'
+    note: 'Routes enumerated from the live wp-json discovery document (200 routes across 12 namespaces);
+      each operation below was probed anonymously and returned HTTP 200 (X-WP-Total: 20). Schemas reflect
+      the fields observed in live responses on 2026-08-08. No fabricated operations.'
+servers:
+- url: https://www.burgersinghonline.com/wp-json
+  description: Production
+tags:
+- name: Pages
+  description: Menu, franchise, store-locator and legal pages of the Burger Singh site.
+paths:
+  /wp/v2/pages:
+    get:
+      tags:
+      - Pages
+      operationId: listPages
+      summary: List site pages
+      description: Returns a paginated collection of published pages. Total item and page counts come
+        back in the X-WP-Total and X-WP-TotalPages headers; RFC 8288 Link carries next/prev.
+      parameters:
+      - $ref: '#/components/parameters/page'
+      - $ref: '#/components/parameters/perPage'
+      - $ref: '#/components/parameters/search'
+      - $ref: '#/components/parameters/order'
+      - $ref: '#/components/parameters/orderby'
+      - $ref: '#/components/parameters/context'
+      - $ref: '#/components/parameters/fields'
+      - name: slug
+        in: query
+        description: Limit results to pages with one of the given slugs.
+        schema:
+          type: array
+          items:
+            type: string
+      - name: parent
+        in: query
+        description: Limit results to pages with the given parent page IDs.
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: menu_order
+        in: query
+        description: Limit results to pages with a specific menu_order value.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: A page of site pages.
+          headers:
+            X-WP-Total:
+              $ref: '#/components/headers/XWPTotal'
+            X-WP-TotalPages:
+              $ref: '#/components/headers/XWPTotalPages'
+            Link:
+              $ref: '#/components/headers/LinkPagination'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Page'
+        '400':
+          $ref: '#/components/responses/InvalidParam'
+  /wp/v2/pages/{id}:
+    get:
+      tags:
+      - Pages
+      operationId: getPage
+      summary: Get a site page
+      description: Returns a single published page by its numeric WordPress page ID.
+      parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/context'
+      - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          description: The requested page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Page'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      description: Unique numeric identifier for the object.
+      schema:
+        type: integer
+    page:
+      name: page
+      in: query
+      description: Current page of the collection. Defaults to 1.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    perPage:
+      name: per_page
+      in: query
+      description: 'Maximum number of items returned. Verified live: values outside 1-100 return HTTP
+        400 rest_invalid_param.'
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    order:
+      name: order
+      in: query
+      description: Order sort attribute ascending or descending.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+    orderby:
+      name: orderby
+      in: query
+      description: Sort collection by object attribute.
+      schema:
+        type: string
+    context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines the fields present in the response.
+        Only view and embed are available anonymously.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        default: view
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated list of fields to limit the response to. Verified live.
+      schema:
+        type: string
+    embed:
+      name: _embed
+      in: query
+      description: Embed linked resources (author, featured media, terms) into the response.
+      schema:
+        type: boolean
+  headers:
+    XWPTotal:
+      description: Total number of items in the collection.
+      schema:
+        type: integer
+    XWPTotalPages:
+      description: Total number of pages in the collection at the current per_page.
+      schema:
+        type: integer
+    LinkPagination:
+      description: RFC 8288 Link header carrying next and prev pagination relations. Verified live on
+        /wp/v2/pages.
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: The requested object does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_post_invalid_id
+            message: Invalid post ID.
+            data:
+              status: 404
+    InvalidParam:
+      description: One or more query parameters failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_invalid_param
+            message: 'Invalid parameter(s): per_page'
+            data:
+              status: 400
+              params:
+                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+  schemas:
+    RenderedText:
+      type: object
+      description: WordPress rendered-text object.
+      properties:
+        rendered:
+          type: string
+      required:
+      - rendered
+    Error:
+      type: object
+      description: The WordPress REST error envelope, verified live on this host. This is NOT RFC 9457
+        application/problem+json - it is served as application/json with a WordPress-specific shape.
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+            params:
+              type: object
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              additionalProperties: true
+          required:
+          - status
+      required:
+      - code
+      - message
+      - data
+    Page:
+      type: object
+      description: A WordPress page as returned anonymously in view context. Fields verified live on 2026-08-08.
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+          format: date-time
+        date_gmt:
+          type: string
+          format: date-time
+        guid:
+          $ref: '#/components/schemas/RenderedText'
+        modified:
+          type: string
+          format: date-time
+        modified_gmt:
+          type: string
+          format: date-time
+        slug:
+          type: string
+        status:
+          type: string
+          description: 'Verified live values on this host: publish, acf-disabled.'
+        type:
+          type: string
+          const: page
+        link:
+          type: string
+          format: uri
+        title:
+          $ref: '#/components/schemas/RenderedText'
+        content:
+          type: object
+          properties:
+            rendered:
+              type: string
+            protected:
+              type: boolean
+        excerpt:
+          type: object
+          properties:
+            rendered:
+              type: string
+            protected:
+              type: boolean
+        author:
+          type: integer
+        featured_media:
+          type: integer
+        parent:
+          type: integer
+          description: ID of the parent page, or 0 for a top-level page.
+        menu_order:
+          type: integer
+        comment_status:
+          type: string
+        ping_status:
+          type: string
+        template:
+          type: string
+        meta:
+          type: object
+          additionalProperties: true
+        class_list:
+          type: array
+          items:
+            type: string
+        yoast_head:
+          type: string
+          description: Rendered Yoast SEO head markup for this page.
+        yoast_head_json:
+          type: object
+          additionalProperties: true
+          description: Structured Yoast SEO head metadata including the schema.org JSON-LD graph.
+        _links:
+          type: object
+          additionalProperties: true
+      required:
+      - id
+      - slug
+      - type
+      - link
+      - title
+      - content

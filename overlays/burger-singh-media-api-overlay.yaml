@@ -1,0 +1,25 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Burger Singh Media API
+  version: 1.0.0
+extends: openapi/burger-singh-media-api-openapi.yml
+x-apis-io-provenance:
+  method: generated
+  source: openapi/burger-singh-media-api-openapi.yml
+  generated_on: '2026-08-08'
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: burger-singh
+    x-apievangelist-surface: wordpress-rest
+    x-apievangelist-note: Third-party profile. Burger Singh publishes no developer program; this contract
+      describes the anonymously readable WordPress REST surface behind burgersinghonline.com, derived
+      from the live route index.
+    x-apievangelist-verified: '2026-08-08'
+- target: $.info.contact
+  update:
+    x-note: General site feedback form; Burger Singh publishes no developer support channel.
+- target: $.servers[0]
+  update:
+    x-tls: TLSv1.3
+    x-host-platform: Hostinger / LiteSpeed

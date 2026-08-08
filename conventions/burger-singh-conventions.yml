@@ -1,0 +1,113 @@
+generated: '2026-08-08'
+method: probed
+source: live anonymous probes of https://www.burgersinghonline.com/wp-json/ (2026-08-08)
+scope: >-
+  Cross-cutting request/response semantics of the anonymously readable WordPress REST surface behind
+  burgersinghonline.com. Burger Singh publishes no API conventions document of its own; everything
+  below was observed on live responses or read from the self-describing route table, and reflects
+  WordPress core behaviour as deployed on this host.
+authentication:
+  style: none (anonymous read)
+  detail: >-
+    No credential of any kind is required or accepted for the documented read surface.
+  see: authentication/burger-singh-authentication.yml
+idempotency:
+  supported: false
+  detail: >-
+    No idempotency key header or parameter is documented, advertised, or accepted. The documented
+    surface is read-only (GET), so idempotency is a property of the method rather than a contract
+    the provider offers. No Idempotency pointer is emitted for this provider.
+pagination:
+  style: page-number
+  params:
+  - name: page
+    default: 1
+    description: 1-indexed page of the collection.
+  - name: per_page
+    default: 10
+    min: 1
+    max: 100
+    description: Verified live - values outside 1-100 return HTTP 400 rest_invalid_param.
+  response_signals:
+  - header: X-WP-Total
+    description: Total number of items in the collection. Observed 20 on pages, 576 on media, 13 on categories.
+  - header: X-WP-TotalPages
+    description: Total number of pages at the current per_page.
+  - header: Link
+    description: >-
+      RFC 8288 Link header carrying rel="next" and rel="prev". Verified live on
+      /wp/v2/pages?per_page=1.
+  cors: >-
+    Access-Control-Expose-Headers advertises X-WP-Total, X-WP-TotalPages and Link, so a browser
+    client can read the pagination signals cross-origin.
+sparse_fieldsets:
+  supported: true
+  param: _fields
+  detail: >-
+    Comma-separated allow-list of top-level response fields, e.g.
+    /wp/v2/pages?_fields=id,slug,link,title. Verified live.
+expansion:
+  supported: true
+  param: _embed
+  detail: >-
+    Embeds linked resources (author, featured media, terms) into an _embedded block on each record,
+    following the _links relations already present in every response.
+context_projection:
+  param: context
+  values: [view, embed]
+  detail: >-
+    Selects the field projection. `edit` exists in core but requires authentication and is not
+    available on this surface.
+filtering_and_sort:
+  params: [search, slug, order, orderby, parent, menu_order, media_type, mime_type, hide_empty]
+  detail: Availability varies by collection; see each openapi/ file for the per-operation set.
+hypermedia:
+  style: WordPress _links (HAL-like)
+  detail: >-
+    Every record carries a _links object with self, collection, about, author, replies and
+    wp:attachment relations using registered link-relation URIs. This is the only hypermedia
+    affordance on the surface.
+versioning:
+  scheme: uri-path namespace
+  current: wp/v2
+  detail: >-
+    The namespace is the version. Live namespaces on this host: wp/v2, yoast/v1, oembed/1.0,
+    contact-form-7/v1, post-smtp/v1, post-smtp/v2, psd/v1, adsagent/v1, advancedformintegration,
+    wp-site-health/v1, wp-block-editor/v1, wp-abilities/v1. Burger Singh publishes no versioning
+    policy of its own; the version moves when the platform or a plugin moves.
+  see: lifecycle/burger-singh-lifecycle.yml
+error_envelope:
+  media_type: application/json
+  shape: '{code, message, data:{status, params?, details?}}'
+  rfc9457: false
+  see: errors/burger-singh-problem-types.yml
+rate_limiting:
+  signalled: false
+  detail: >-
+    No RateLimit, X-RateLimit, Retry-After or equivalent header was observed on any response, and no
+    quota is documented. Absence of a signal is not a guarantee of absence of a limit - the origin
+    sits behind Hostinger/LiteSpeed and may throttle without advertising it.
+request_tracing:
+  supported: false
+  detail: No request-id or correlation-id header is emitted or accepted.
+caching:
+  detail: >-
+    No Cache-Control, ETag or Last-Modified header was observed on the JSON responses. Content is
+    low-churn (site last rebuilt 2025-08-11 per the RSS lastBuildDate), so poll infrequently.
+response_headers_observed:
+- x-robots-tag: noindex
+- x-content-type-options: nosniff
+- content-security-policy: upgrade-insecure-requests
+- 'allow: GET (on the read routes)'
+- vary: Origin
+- alt-svc: h3
+cross_links:
+  errors: errors/burger-singh-problem-types.yml
+  authentication: authentication/burger-singh-authentication.yml
+  lifecycle: lifecycle/burger-singh-lifecycle.yml
+  data_model: data-model/burger-singh-data-model.yml
+  conformance: conformance/burger-singh-conformance.yml
+x-evidence:
+  fetched: '2026-08-08'
+  host: https://www.burgersinghonline.com
+  http_status: 200

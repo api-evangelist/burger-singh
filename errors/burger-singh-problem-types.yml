@@ -1,0 +1,113 @@
+generated: '2026-08-08'
+method: probed
+source: live anonymous probes of https://www.burgersinghonline.com/wp-json/ (2026-08-08)
+format: wordpress-rest-error
+rfc9457: false
+envelope:
+  media_type: application/json
+  note: >-
+    The WordPress REST API does NOT emit RFC 9457 application/problem+json. Errors are served as
+    application/json with a WordPress-specific envelope of {code, message, data}, where data.status
+    repeats the HTTP status and data.params / data.details carry per-parameter validation detail.
+    Recorded here so an agent binds to the real shape rather than assuming Problem Details.
+  fields:
+  - name: code
+    type: string
+    description: Machine-readable WordPress error slug, e.g. rest_post_invalid_id.
+  - name: message
+    type: string
+    description: Human-readable message. Not localized on this host (en-US).
+  - name: data.status
+    type: integer
+    description: HTTP status repeated inside the body.
+  - name: data.params
+    type: object
+    description: Map of failing parameter name to a human-readable reason. Present on 400 only.
+  - name: data.details
+    type: object
+    description: Map of failing parameter name to a nested {code, message, data} record. 400 only.
+problems:
+- status: 400
+  code: rest_invalid_param
+  title: One or more query parameters failed validation
+  detail_example: 'Invalid parameter(s): per_page'
+  remediation: >-
+    Correct the named parameter. per_page must be between 1 and 100 inclusive on this host.
+  observed_on: GET /wp/v2/pages?per_page=999
+  source_operation: openapi/burger-singh-pages-api-openapi.yml#listPages
+- status: 404
+  code: rest_post_invalid_id
+  title: Invalid post ID
+  detail_example: Invalid post ID.
+  remediation: >-
+    The numeric id does not resolve to a published object of that type. List the collection first
+    and use an id from it.
+  observed_on: GET /wp/v2/pages/999999
+  source_operation: openapi/burger-singh-pages-api-openapi.yml#getPage
+- status: 404
+  code: rest_no_route
+  title: No route matched the URL and method
+  detail_example: No route was found matching the URL and request method.
+  remediation: >-
+    Read GET /wp-json/ and use a route from the live route table. Custom post types on this host
+    (store_locator, inthenews, hotdeals, medialist) are NOT REST-exposed and return this error.
+  observed_on: GET /wp/v2/store_locator
+  source_operation: openapi/burger-singh-discovery-api-openapi.yml#getRootIndex
+- status: 401
+  code: rest_forbidden
+  title: Not permitted anonymously
+  detail_example: Sorry, you are not allowed to do that.
+  remediation: >-
+    The route requires a logged-in WordPress user. There is no public developer credential for this
+    surface; treat these routes as out of scope.
+  observed_on: GET /wp/v2/settings, GET /wp-abilities/v1/abilities
+  source_operation: authentication/burger-singh-authentication.yml
+- status: 401
+  code: rest_cannot_view_themes
+  title: Themes not viewable anonymously
+  detail_example: Sorry, you are not allowed to view themes.
+  observed_on: GET /wp/v2/themes
+- status: 401
+  code: rest_cannot_view_plugins
+  title: Plugins not manageable anonymously
+  detail_example: Sorry, you are not allowed to manage plugins for this site.
+  observed_on: GET /wp/v2/plugins
+- status: 401
+  code: rest_cannot_view
+  title: Menus not viewable anonymously
+  detail_example: Sorry, you are not allowed to view menus.
+  observed_on: GET /wp/v2/menus
+- status: 401
+  code: rest_block_type_cannot_view
+  title: Block types not manageable anonymously
+  detail_example: Sorry, you are not allowed to manage block types.
+  observed_on: GET /wp/v2/block-types
+- status: 401
+  code: rest_cannot_manage_templates
+  title: Templates not accessible anonymously
+  detail_example: Sorry, you are not allowed to access the templates on this site.
+  observed_on: GET /wp/v2/templates
+- status: 401
+  code: rest_cannot_read
+  title: Revisions not readable anonymously
+  detail_example: Sorry, you are not allowed to view revisions of this post.
+  observed_on: GET /wp/v2/pages/20/revisions
+- status: 403
+  code: wpcf7_forbidden
+  title: Contact forms not accessible anonymously
+  detail_example: You are not allowed to access contact forms.
+  observed_on: GET /contact-form-7/v1/contact-forms
+  note: >-
+    Contact Form 7 uses 403 where WordPress core uses 401 for the same class of failure - a real
+    inconsistency in the error surface, recorded rather than normalized.
+non_conforming:
+- route: /post-smtp/v1/get-logs
+  status: 400
+  body: '{"success":false,"data":{"error":"Auth token missing."}}'
+  note: >-
+    The Post SMTP plugin routes do not use the WordPress core error envelope at all. An agent
+    parsing `code`/`message` will get null here.
+x-evidence:
+  fetched: '2026-08-08'
+  host: https://www.burgersinghonline.com
+  note: Every status, code and message above was observed on a live anonymous request.
