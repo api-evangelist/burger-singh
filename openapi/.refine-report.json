@@ -1,0 +1,32 @@
+{
+  "provider": "burger-singh",
+  "sources": [
+    "burger-singh-discovery-api-openapi.yml",
+    "burger-singh-media-api-openapi.yml",
+    "burger-singh-pages-api-openapi.yml",
+    "burger-singh-search-api-openapi.yml",
+    "burger-singh-seo-api-openapi.yml",
+    "burger-singh-taxonomy-api-openapi.yml"
+  ],
+  "outputs": [
+    "burger-singh-discovery-api-openapi.yml",
+    "burger-singh-media-api-openapi.yml",
+    "burger-singh-pages-api-openapi.yml",
+    "burger-singh-search-api-openapi.yml",
+    "burger-singh-seo-api-openapi.yml",
+    "burger-singh-taxonomy-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "burger-singh-discovery-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "burger-singh-media-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "burger-singh-pages-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "burger-singh-search-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "burger-singh-seo-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "burger-singh-taxonomy-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": []
+}

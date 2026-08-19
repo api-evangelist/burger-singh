@@ -2,14 +2,12 @@ generated: '2026-08-08'
 method: derived
 status: candidate
 source: openapi/burger-singh-*-openapi.yml
-summary: >-
-  Burger Singh publishes NO hosted or remote MCP server. Searched the site, the /.well-known/
-  surface and the public registries on 2026-08-08 and found none; there is no mcp.burgersingh.com or
-  mcp.burgersinghonline.com host and no MCP reference anywhere on the site. The tool list below is a
-  CANDIDATE derived mechanically from the fifteen anonymously-readable OpenAPI operations in this
-  repo - one tool per operationId. It is a proposal for what an MCP server over this surface would
-  expose, not something Burger Singh offers. Each tool's real input contract is the parameters block
-  of its backing operation in the referenced spec.
+summary: Burger Singh publishes NO hosted or remote MCP server. Searched the site, the /.well-known/ surface
+  and the public registries on 2026-08-08 and found none; there is no mcp.burgersingh.com or mcp.burgersinghonline.com
+  host and no MCP reference anywhere on the site. The tool list below is a CANDIDATE derived mechanically
+  from the fifteen anonymously-readable OpenAPI operations in this repo - one tool per operationId. It
+  is a proposal for what an MCP server over this surface would expose, not something Burger Singh offers.
+  Each tool's real input contract is the parameters block of its backing operation in the referenced spec.
 search:
   performed: '2026-08-08'
   probed:
@@ -22,10 +20,9 @@ search:
   - target: https://www.burgersinghonline.com/wp-json/ (full 200-route table, 12 namespaces)
     result: no MCP namespace registered
   - target: https://www.burgersinghonline.com/wp-json/wp-abilities/v1/abilities
-    result: >-
-      401 rest_forbidden. The WordPress Abilities API - the closest thing to an agent tool registry
-      on this host - is installed but entirely credentialed. No ability names, descriptions or input
-      schemas are readable anonymously, so none are represented below.
+    result: 401 rest_forbidden. The WordPress Abilities API - the closest thing to an agent tool registry
+      on this host - is installed but entirely credentialed. No ability names, descriptions or input schemas
+      are readable anonymously, so none are represented below.
   - target: site search for "MCP", "Model Context Protocol", "agent", "API"
     result: no reference found
   outcome: none
@@ -34,30 +31,27 @@ server:
   transport: http
   url: null
   published: false
-  note: >-
-    No server URL - nothing is published. A candidate server would front
-    https://www.burgersinghonline.com/wp-json with no credential, since the surface is anonymous.
+  note: No server URL - nothing is published. A candidate server would front https://www.burgersinghonline.com/wp-json
+    with no credential, since the surface is anonymous.
 auth:
   required: false
   note: All candidate tools are anonymous reads. No token, key or consent step is involved.
 tools:
 - name: list_pages
-  description: >-
-    List the pages of burgersinghonline.com - menu, franchise, store locator, feedback and legal.
+  description: List the pages of burgersinghonline.com - menu, franchise, store locator, feedback and
+    legal.
   source_operation: openapi/burger-singh-pages-api-openapi.yml#listPages
 - name: get_page
   description: Get a single site page by its numeric ID, including its rendered content.
   source_operation: openapi/burger-singh-pages-api-openapi.yml#getPage
 - name: list_media
-  description: >-
-    List media library attachments - menu boards, food photography, outlet and franchise imagery.
+  description: List media library attachments - menu boards, food photography, outlet and franchise imagery.
   source_operation: openapi/burger-singh-media-api-openapi.yml#listMedia
 - name: get_media_item
   description: Get a single media attachment, including its size variants and source URL.
   source_operation: openapi/burger-singh-media-api-openapi.yml#getMediaItem
 - name: list_categories
-  description: >-
-    List category terms - the franchise investment brackets, store formats and deal/news classes.
+  description: List category terms - the franchise investment brackets, store formats and deal/news classes.
   source_operation: openapi/burger-singh-taxonomy-api-openapi.yml#listCategories
 - name: get_category
   description: Get a single category term by term ID.
@@ -69,12 +63,11 @@ tools:
   description: Get a single post_tag term by term ID.
   source_operation: openapi/burger-singh-taxonomy-api-openapi.yml#getTag
 - name: search_content
-  description: >-
-    Search Burger Singh site content and get back id / title / url / subtype records.
+  description: Search Burger Singh site content and get back id / title / url / subtype records.
   source_operation: openapi/burger-singh-search-api-openapi.yml#searchContent
 - name: get_root_index
-  description: >-
-    Read the self-describing REST route index - namespaces, routes, argument schemas, auth methods.
+  description: Read the self-describing REST route index - namespaces, routes, argument schemas, auth
+    methods.
   source_operation: openapi/burger-singh-discovery-api-openapi.yml#getRootIndex
 - name: list_types
   description: List the registered, REST-exposed content types.
@@ -89,17 +82,15 @@ tools:
   description: List the public author records.
   source_operation: openapi/burger-singh-discovery-api-openapi.yml#listUsers
 - name: get_seo_head
-  description: >-
-    Get rendered SEO head metadata and the schema.org JSON-LD graph for any burgersinghonline.com
+  description: Get rendered SEO head metadata and the schema.org JSON-LD graph for any burgersinghonline.com
     URL.
   source_operation: openapi/burger-singh-seo-api-openapi.yml#getSeoHead
 not_offered:
-  note: >-
-    The tools an agent would actually want from a restaurant chain - find the nearest outlet, read
-    the menu as data, check a price, place or track an order, redeem a deal - cannot be derived,
-    because the underlying content is not REST-exposed (store_locator, hotdeals, inthenews,
-    medialist all return 404 rest_no_route) and there is no ordering API on this domain. Recorded so
-    the gap is explicit rather than silently absent.
+  note: The tools an agent would actually want from a restaurant chain - find the nearest outlet, read
+    the menu as data, check a price, place or track an order, redeem a deal - cannot be derived, because
+    the underlying content is not REST-exposed (store_locator, hotdeals, inthenews, medialist all return
+    404 rest_no_route) and there is no ordering API on this domain. Recorded so the gap is explicit rather
+    than silently absent.
   missing:
   - find_outlet
   - get_menu_items
@@ -110,3 +101,9 @@ not_offered:
 x-evidence:
   fetched: '2026-08-08'
   host: https://www.burgersinghonline.com
+deployment:
+  mode: none
+  verified: derived
+  tools: 15
+  checked: '2026-08-12'
+  source: catalog MCP census

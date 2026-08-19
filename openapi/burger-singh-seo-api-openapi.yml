@@ -1,12 +1,9 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Burger Singh SEO Metadata API
+  title: Burger Singh Metadata SEO API
   version: yoast/v1
   summary: Rendered SEO head metadata and JSON-LD schema graph for any site URL.
-  description: The Yoast SEO head endpoint on burgersinghonline.com returns, for any URL on the site,
-    the rendered head markup and the structured schema.org JSON-LD graph behind it - canonical URL, title,
-    Open Graph and Twitter card metadata, and the Organization / WebSite / WebPage node graph. Useful
-    to an agent that needs the site's own structured description of a page without parsing the HTML.
+  description: The Yoast SEO head endpoint on burgersinghonline.com returns, for any URL on the site, the rendered head markup and the structured schema.org JSON-LD graph behind it - canonical URL, title, Open Graph and Twitter card metadata, and the Organization / WebSite / WebPage node graph. Useful to an agent that needs the site's own structured description of a page without parsing the HTML.
   contact:
     name: Burger Singh
     url: https://www.burgersinghonline.com/feedback/
@@ -17,9 +14,7 @@ info:
     method: derived
     source: https://www.burgersinghonline.com/wp-json/
     derived_on: '2026-08-08'
-    note: Route enumerated from the live wp-json discovery document (yoast/v1 namespace, 42 routes); /yoast/v1/get_head
-      was probed anonymously against the /menu/ page and returned HTTP 200 with rendered head markup on
-      2026-08-08. Yoast SEO v26.6 was reported in the response.
+    note: Route enumerated from the live wp-json discovery document (yoast/v1 namespace, 42 routes); /yoast/v1/get_head was probed anonymously against the /menu/ page and returned HTTP 200 with rendered head markup on 2026-08-08. Yoast SEO v26.6 was reported in the response.
 servers:
 - url: https://www.burgersinghonline.com/wp-json
   description: Production
@@ -33,8 +28,7 @@ paths:
       - SEO
       operationId: getSeoHead
       summary: Get rendered SEO head metadata for a URL
-      description: Returns the rendered Yoast SEO head markup for the given site URL, along with the parsed
-        metadata and its schema.org JSON-LD graph.
+      description: Returns the rendered Yoast SEO head markup for the given site URL, along with the parsed metadata and its schema.org JSON-LD graph.
       parameters:
       - name: url
         in: query
@@ -55,56 +49,10 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    context:
-      name: context
-      in: query
-      description: Scope under which the request is made; determines the fields present in the response.
-        Only view and embed are available anonymously.
-      schema:
-        type: string
-        enum:
-        - view
-        - embed
-        default: view
-  responses:
-    NotFound:
-      description: The requested object does not exist.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: rest_post_invalid_id
-            message: Invalid post ID.
-            data:
-              status: 404
-    InvalidParam:
-      description: One or more query parameters failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: rest_invalid_param
-            message: 'Invalid parameter(s): per_page'
-            data:
-              status: 400
-              params:
-                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
   schemas:
-    RenderedText:
-      type: object
-      description: WordPress rendered-text object.
-      properties:
-        rendered:
-          type: string
-      required:
-      - rendered
     Error:
       type: object
-      description: The WordPress REST error envelope, verified live on this host. This is NOT RFC 9457
-        application/problem+json - it is served as application/json with a WordPress-specific shape.
+      description: The WordPress REST error envelope, verified live on this host. This is NOT RFC 9457 application/problem+json - it is served as application/json with a WordPress-specific shape.
       properties:
         code:
           type: string
@@ -134,11 +82,35 @@ components:
       properties:
         html:
           type: string
-          description: Rendered head markup including title, canonical, robots, Open Graph and Twitter
-            tags.
+          description: Rendered head markup including title, canonical, robots, Open Graph and Twitter tags.
         json:
           type: object
           additionalProperties: true
           description: Parsed head metadata including the schema.org JSON-LD graph.
       required:
       - html
+  responses:
+    NotFound:
+      description: The requested object does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_post_invalid_id
+            message: Invalid post ID.
+            data:
+              status: 404
+    InvalidParam:
+      description: One or more query parameters failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_invalid_param
+            message: 'Invalid parameter(s): per_page'
+            data:
+              status: 400
+              params:
+                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)

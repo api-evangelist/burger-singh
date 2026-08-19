@@ -1,0 +1,37 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Burger Singh Metadata SEO API",
+    "version": "yoast/v1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "SEO",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get rendered SEO head metadata for a URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.burgersinghonline.com/wp-json/yoast/v1/get_head",
+            "params": [
+              {
+                "name": "url",
+                "value": "",
+                "type": "query",
+                "description": "Absolute URL on burgersinghonline.com to render SEO head metadata for."
+              }
+            ]
+          },
+          "docs": "Returns the rendered Yoast SEO head markup for the given site URL, along with the parsed metadata and its schema.org JSON-LD graph."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

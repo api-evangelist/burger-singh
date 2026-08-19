@@ -1,0 +1,536 @@
+{
+  "item": [
+    {
+      "id": "d337b9f6-02ee-4c16-8966-2882c3e5e5d3",
+      "name": "Discovery",
+      "description": {
+        "content": "Route index and registered-object metadata for the Burger Singh site.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "cf02692b-5a68-4695-a44a-805e2410f4d6",
+          "name": "Get the REST API root index",
+          "request": {
+            "name": "Get the REST API root index",
+            "description": {
+              "content": "Returns the site name, description, home and site URLs, GMT offset, site icon, the list of registered namespaces, the full route table with per-route methods and argument schemas, and the supported authentication methods.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "namespace",
+                  "value": "<string>",
+                  "description": "Limit the index to a single registered namespace, e.g. wp/v2."
+                },
+                {
+                  "disabled": false,
+                  "key": "context",
+                  "value": "view",
+                  "description": "Scope under which the request is made; determines the fields present in the response. Only view and embed are available anonymously."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4c1753d2-0d68-4e55-8e2b-47f379d2b9e0",
+              "name": "The REST API root index.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "namespace",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "context",
+                      "value": "view"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"string\",\n  \"url\": \"http://NXdSaFGigxBSNsnOXOVfsuFJMeUEgR.suRyhpy-huCI-,SbB0Q.fg7JMISKN5+3cqsHJG5c\",\n  \"namespaces\": [\n    \"string\",\n    \"string\"\n  ],\n  \"routes\": {\n    \"key_0\": true,\n    \"key_1\": false,\n    \"key_2\": true\n  },\n  \"description\": \"string\",\n  \"home\": \"https://CaLAGcZtysPGTxPlxFKITGg.yxswN7O308BJXHmhsQ\",\n  \"gmt_offset\": \"string\",\n  \"timezone_string\": \"string\",\n  \"site_icon_url\": \"http://qoBoGuQFvshdyaniTLUEyYmpPD.pniHOl3NSRj\",\n  \"authentication\": {\n    \"key_0\": 9509.362146073194,\n    \"key_1\": \"string\",\n    \"key_2\": true,\n    \"key_3\": 3163.0656462861284\n  },\n  \"_links\": {\n    \"key_0\": 6898,\n    \"key_1\": 8415.281917068107\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "16fd6b11-bbe4-4ac4-a1a4-f7d6a0e4fe04",
+          "name": "List registered content types",
+          "request": {
+            "name": "List registered content types",
+            "description": {
+              "content": "Returns every REST-exposed content type keyed by slug. Verified live on this host: post, page, attachment, nav_menu_item, wp_block, wp_template, wp_template_part, wp_global_styles, wp_navigation, wp_font_family and wp_font_face.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "wp",
+                "v2",
+                "types"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "context",
+                  "value": "view",
+                  "description": "Scope under which the request is made; determines the fields present in the response. Only view and embed are available anonymously."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "cf9a8073-4c57-4a77-8b9f-88f4d51c2dd6",
+              "name": "A map of content-type slug to type descriptor.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wp",
+                    "v2",
+                    "types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "context",
+                      "value": "view"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": {\n    \"slug\": \"string\",\n    \"rest_base\": \"string\",\n    \"name\": \"string\",\n    \"rest_namespace\": \"string\",\n    \"description\": \"string\",\n    \"hierarchical\": true,\n    \"taxonomies\": [\n      \"string\",\n      \"string\"\n    ],\n    \"supports\": {\n      \"key_0\": 1648,\n      \"key_1\": 6264\n    },\n    \"_links\": {\n      \"key_0\": true,\n      \"key_1\": 9010,\n      \"key_2\": 4263.5792965783285,\n      \"key_3\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ab98fda8-c923-4be0-b67a-702c9d9f31fe",
+          "name": "List registered taxonomies",
+          "request": {
+            "name": "List registered taxonomies",
+            "description": {
+              "content": "Returns every REST-exposed taxonomy keyed by slug, with the content types it applies to. Verified live: category applies to post, inthenews, hotdeals and attachment.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "wp",
+                "v2",
+                "taxonomies"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "context",
+                  "value": "view",
+                  "description": "Scope under which the request is made; determines the fields present in the response. Only view and embed are available anonymously."
+                },
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Limit results to taxonomies associated with a content type."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5d612a66-ba11-49e6-92cc-f2e58e24ec78",
+              "name": "A map of taxonomy slug to taxonomy descriptor.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wp",
+                    "v2",
+                    "taxonomies"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "context",
+                      "value": "view"
+                    },
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": {\n    \"slug\": \"string\",\n    \"rest_base\": \"string\",\n    \"types\": [\n      \"string\",\n      \"string\"\n    ],\n    \"name\": \"string\",\n    \"rest_namespace\": \"string\",\n    \"description\": \"string\",\n    \"hierarchical\": false,\n    \"_links\": {\n      \"key_0\": 7229.5406320734955,\n      \"key_1\": 7384\n    }\n  },\n  \"key_1\": {\n    \"slug\": \"string\",\n    \"rest_base\": \"string\",\n    \"types\": [\n      \"string\",\n      \"string\"\n    ],\n    \"name\": \"string\",\n    \"rest_namespace\": \"string\",\n    \"description\": \"string\",\n    \"hierarchical\": false,\n    \"_links\": {\n      \"key_0\": 2698.136290609664\n    }\n  },\n  \"key_2\": {\n    \"slug\": \"string\",\n    \"rest_base\": \"string\",\n    \"types\": [\n      \"string\",\n      \"string\"\n    ],\n    \"name\": \"string\",\n    \"rest_namespace\": \"string\",\n    \"description\": \"string\",\n    \"hierarchical\": true,\n    \"_links\": {\n      \"key_0\": 9020.497189340907\n    }\n  },\n  \"key_3\": {\n    \"slug\": \"string\",\n    \"rest_base\": \"string\",\n    \"types\": [\n      \"string\",\n      \"string\"\n    ],\n    \"name\": \"string\",\n    \"rest_namespace\": \"string\",\n    \"description\": \"string\",\n    \"hierarchical\": true,\n    \"_links\": {\n      \"key_0\": true,\n      \"key_1\": true\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5799892f-b4f6-4a08-b04c-96512e71e8dc",
+          "name": "List available post statuses",
+          "request": {
+            "name": "List available post statuses",
+            "description": {
+              "content": "Returns the publicly visible post statuses. Verified live on this host: publish and acf-disabled.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "wp",
+                "v2",
+                "statuses"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "context",
+                  "value": "view",
+                  "description": "Scope under which the request is made; determines the fields present in the response. Only view and embed are available anonymously."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5f7193d1-42e1-4ae0-9301-1adfb1b9c6c6",
+              "name": "A map of status slug to status descriptor.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wp",
+                    "v2",
+                    "statuses"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "context",
+                      "value": "view"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": 2535.793282760276\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e69b041f-b1ec-4204-a48e-245d850b93a4",
+          "name": "List public authors",
+          "request": {
+            "name": "List public authors",
+            "description": {
+              "content": "Returns the public author records. Verified live: a single author (X-WP-Total: 1).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "wp",
+                "v2",
+                "users"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Current page of the collection. Defaults to 1."
+                },
+                {
+                  "disabled": false,
+                  "key": "per_page",
+                  "value": "10",
+                  "description": "Maximum number of items returned. Verified live: values outside 1-100 return HTTP 400 rest_invalid_param."
+                },
+                {
+                  "disabled": false,
+                  "key": "search",
+                  "value": "<string>",
+                  "description": "Limit results to those matching a string."
+                },
+                {
+                  "disabled": false,
+                  "key": "context",
+                  "value": "view",
+                  "description": "Scope under which the request is made; determines the fields present in the response. Only view and embed are available anonymously."
+                },
+                {
+                  "disabled": false,
+                  "key": "_fields",
+                  "value": "<string>",
+                  "description": "Comma-separated list of fields to limit the response to. Verified live."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8d7ad096-5cf0-43a8-bf34-b4b6a0d13192",
+              "name": "A page of public author records.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wp",
+                    "v2",
+                    "users"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "10"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "context",
+                      "value": "view"
+                    },
+                    {
+                      "key": "_fields",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Total number of items in the collection.",
+                  "key": "X-WP-Total",
+                  "value": "8743"
+                },
+                {
+                  "disabled": false,
+                  "description": "Total number of pages in the collection at the current per_page.",
+                  "key": "X-WP-TotalPages",
+                  "value": "8743"
+                },
+                {
+                  "disabled": false,
+                  "description": "RFC 8288 Link header carrying next and prev pagination relations. Verified live on /wp/v2/pages.",
+                  "key": "Link",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 7309,\n    \"name\": \"string\",\n    \"slug\": \"string\",\n    \"url\": \"string\",\n    \"description\": \"string\",\n    \"link\": \"http://msVsrpOOVFmMYJHtWbUTgSIhOHln.oorFqFFQ5jzXcDGWkKJHGsydx+GUrh+jpVYse\",\n    \"avatar_urls\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    \"meta\": {\n      \"key_0\": 9864\n    },\n    \"yoast_head\": \"string\",\n    \"yoast_head_json\": {\n      \"key_0\": 6036.29077655782\n    },\n    \"_links\": {\n      \"key_0\": 7434.7536186878215,\n      \"key_1\": false,\n      \"key_2\": \"string\"\n    }\n  },\n  {\n    \"id\": 7005,\n    \"name\": \"string\",\n    \"slug\": \"string\",\n    \"url\": \"string\",\n    \"description\": \"string\",\n    \"link\": \"https://UAclgHVpnebXfeukAcbcyFeUH.vpeiCeX+wYfi2JkpFUn0cI0uinJhcpa7N6i4\",\n    \"avatar_urls\": {\n      \"key_0\": \"string\"\n    },\n    \"meta\": {\n      \"key_0\": 9719.909375568699,\n      \"key_1\": 3041.483994547527,\n      \"key_2\": 1996.068167625007\n    },\n    \"yoast_head\": \"string\",\n    \"yoast_head_json\": {\n      \"key_0\": 5135,\n      \"key_1\": 7708.401509853883,\n      \"key_2\": 616.5543499444959,\n      \"key_3\": true\n    },\n    \"_links\": {\n      \"key_0\": true,\n      \"key_1\": 152.95088700154503\n    }\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://www.burgersinghonline.com/wp-json",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "9669e066-43ae-4104-a3f6-840ff0540642",
+    "name": "Burger Singh Discovery API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The self-describing route index that makes the whole burgersinghonline.com surface machine-readable: the wp-json root document (site name, description, 12 registered namespaces, 200 routes and the supported authentication methods), the registered content types and taxonomies, the available post statuses, and the single public author record. This is the entry point an agent should read first.\n\nContact Support:\n Name: Burger Singh",
+      "type": "text/plain"
+    }
+  }
+}

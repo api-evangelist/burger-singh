@@ -1,11 +1,9 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Burger Singh Search API
   version: wp/v2
   summary: Public cross-content search over burgersinghonline.com.
-  description: Anonymous cross-content search over the published pages of burgersinghonline.com, returning
-    lightweight id / title / url / type / subtype records with an embeddable link to the full object.
-    This is the fastest way for an agent to locate the menu, franchise or store-locator page by keyword.
+  description: Anonymous cross-content search over the published pages of burgersinghonline.com, returning lightweight id / title / url / type / subtype records with an embeddable link to the full object. This is the fastest way for an agent to locate the menu, franchise or store-locator page by keyword.
   contact:
     name: Burger Singh
     url: https://www.burgersinghonline.com/feedback/
@@ -16,8 +14,7 @@ info:
     method: derived
     source: https://www.burgersinghonline.com/wp-json/
     derived_on: '2026-08-08'
-    note: Route enumerated from the live wp-json discovery document; probed anonymously with search=burger
-      and returned HTTP 200 with a real result on 2026-08-08.
+    note: Route enumerated from the live wp-json discovery document; probed anonymously with search=burger and returned HTTP 200 with a real result on 2026-08-08.
 servers:
 - url: https://www.burgersinghonline.com/wp-json
   description: Production
@@ -31,8 +28,7 @@ paths:
       - Search
       operationId: searchContent
       summary: Search site content
-      description: Returns lightweight search results across the searchable content types. Counts come
-        back in X-WP-Total and X-WP-TotalPages.
+      description: Returns lightweight search results across the searchable content types. Counts come back in X-WP-Total and X-WP-TotalPages.
       parameters:
       - $ref: '#/components/parameters/page'
       - $ref: '#/components/parameters/perPage'
@@ -71,123 +67,7 @@ paths:
         '400':
           $ref: '#/components/responses/InvalidParam'
 components:
-  parameters:
-    page:
-      name: page
-      in: query
-      description: Current page of the collection. Defaults to 1.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    perPage:
-      name: per_page
-      in: query
-      description: 'Maximum number of items returned. Verified live: values outside 1-100 return HTTP
-        400 rest_invalid_param.'
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 10
-    search:
-      name: search
-      in: query
-      description: Limit results to those matching a string.
-      schema:
-        type: string
-    context:
-      name: context
-      in: query
-      description: Scope under which the request is made; determines the fields present in the response.
-        Only view and embed are available anonymously.
-      schema:
-        type: string
-        enum:
-        - view
-        - embed
-        default: view
-    fields:
-      name: _fields
-      in: query
-      description: Comma-separated list of fields to limit the response to. Verified live.
-      schema:
-        type: string
-  headers:
-    XWPTotal:
-      description: Total number of items in the collection.
-      schema:
-        type: integer
-    XWPTotalPages:
-      description: Total number of pages in the collection at the current per_page.
-      schema:
-        type: integer
-    LinkPagination:
-      description: RFC 8288 Link header carrying next and prev pagination relations. Verified live on
-        /wp/v2/pages.
-      schema:
-        type: string
-  responses:
-    NotFound:
-      description: The requested object does not exist.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: rest_post_invalid_id
-            message: Invalid post ID.
-            data:
-              status: 404
-    InvalidParam:
-      description: One or more query parameters failed validation.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            code: rest_invalid_param
-            message: 'Invalid parameter(s): per_page'
-            data:
-              status: 400
-              params:
-                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
   schemas:
-    RenderedText:
-      type: object
-      description: WordPress rendered-text object.
-      properties:
-        rendered:
-          type: string
-      required:
-      - rendered
-    Error:
-      type: object
-      description: The WordPress REST error envelope, verified live on this host. This is NOT RFC 9457
-        application/problem+json - it is served as application/json with a WordPress-specific shape.
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-        data:
-          type: object
-          properties:
-            status:
-              type: integer
-            params:
-              type: object
-              additionalProperties:
-                type: string
-            details:
-              type: object
-              additionalProperties: true
-          required:
-          - status
-      required:
-      - code
-      - message
-      - data
     SearchResult:
       type: object
       description: A lightweight cross-content search result. Shape verified live on 2026-08-08.
@@ -214,3 +94,96 @@ components:
       - url
       - type
       - subtype
+    Error:
+      type: object
+      description: The WordPress REST error envelope, verified live on this host. This is NOT RFC 9457 application/problem+json - it is served as application/json with a WordPress-specific shape.
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+            params:
+              type: object
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              additionalProperties: true
+          required:
+          - status
+      required:
+      - code
+      - message
+      - data
+  headers:
+    XWPTotalPages:
+      description: Total number of pages in the collection at the current per_page.
+      schema:
+        type: integer
+    XWPTotal:
+      description: Total number of items in the collection.
+      schema:
+        type: integer
+    LinkPagination:
+      description: RFC 8288 Link header carrying next and prev pagination relations. Verified live on /wp/v2/pages.
+      schema:
+        type: string
+  parameters:
+    page:
+      name: page
+      in: query
+      description: Current page of the collection. Defaults to 1.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated list of fields to limit the response to. Verified live.
+      schema:
+        type: string
+    context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines the fields present in the response. Only view and embed are available anonymously.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        default: view
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    perPage:
+      name: per_page
+      in: query
+      description: 'Maximum number of items returned. Verified live: values outside 1-100 return HTTP 400 rest_invalid_param.'
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+  responses:
+    InvalidParam:
+      description: One or more query parameters failed validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: rest_invalid_param
+            message: 'Invalid parameter(s): per_page'
+            data:
+              status: 400
+              params:
+                per_page: per_page must be between 1 (inclusive) and 100 (inclusive)

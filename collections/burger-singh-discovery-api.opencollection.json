@@ -1,0 +1,149 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Burger Singh Discovery API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Discovery",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the REST API root index",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.burgersinghonline.com/wp-json/",
+            "params": [
+              {
+                "name": "namespace",
+                "value": "",
+                "type": "query",
+                "description": "Limit the index to a single registered namespace, e.g. wp/v2."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Only view and embed are available anonymously."
+              }
+            ]
+          },
+          "docs": "Returns the site name, description, home and site URLs, GMT offset, site icon, the list of registered namespaces, the full route table with per-route methods and argument schemas, and the supported authentication methods."
+        },
+        {
+          "info": {
+            "name": "List registered content types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.burgersinghonline.com/wp-json/wp/v2/types",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Only view and embed are available anonymously."
+              }
+            ]
+          },
+          "docs": "Returns every REST-exposed content type keyed by slug. Verified live on this host: post, page, attachment, nav_menu_item, wp_block, wp_template, wp_template_part, wp_global_styles, wp_navigation, wp_font_family and wp_font_face."
+        },
+        {
+          "info": {
+            "name": "List registered taxonomies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.burgersinghonline.com/wp-json/wp/v2/taxonomies",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Only view and embed are available anonymously."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to taxonomies associated with a content type."
+              }
+            ]
+          },
+          "docs": "Returns every REST-exposed taxonomy keyed by slug, with the content types it applies to. Verified live: category applies to post, inthenews, hotdeals and attachment."
+        },
+        {
+          "info": {
+            "name": "List available post statuses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.burgersinghonline.com/wp-json/wp/v2/statuses",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Only view and embed are available anonymously."
+              }
+            ]
+          },
+          "docs": "Returns the publicly visible post statuses. Verified live on this host: publish and acf-disabled."
+        },
+        {
+          "info": {
+            "name": "List public authors",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.burgersinghonline.com/wp-json/wp/v2/users",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Current page of the collection. Defaults to 1."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items returned. Verified live: values outside 1-100 return HTTP 400 rest_invalid_param."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a string."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines the fields present in the response. Only view and embed are available anonymously."
+              },
+              {
+                "name": "_fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of fields to limit the response to. Verified live."
+              }
+            ]
+          },
+          "docs": "Returns the public author records. Verified live: a single author (X-WP-Total: 1)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
