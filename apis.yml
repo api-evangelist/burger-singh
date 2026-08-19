@@ -37,7 +37,7 @@ x-source: harvest:secondary-market
 x-secondary-market-listing: https://www.hiive.com/securities/burger-singh-stock
 x-tier: stub
 x-tier-reason: harvest
-specificationVersion: '0.20'
+specificationVersion: '0.23'
 created: '2026-08-08'
 modified: '2026-08-08'
 tags:
