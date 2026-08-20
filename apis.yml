@@ -42,6 +42,17 @@ created: '2026-08-08'
 modified: '2026-08-08'
 tags:
 - Company
+- Restaurant
+- Quick Service Restaurant
+- Food and Beverage
+- Franchising
+- Consumer
+- India
+- Retail
+- Content
+- WordPress
+tags_raw:
+- Company
 - Restaurants
 - Quick Service Restaurant
 - Food and Beverage
@@ -62,6 +73,10 @@ apis:
   humanURL: https://www.burgersinghonline.com/wp-json/
   baseURL: https://www.burgersinghonline.com/wp-json
   tags:
+  - Pages
+  - Content
+  - Menus
+  tags_raw:
   - Pages
   - Content
   - Menu
