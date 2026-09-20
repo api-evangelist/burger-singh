@@ -1,29 +1,29 @@
-# Kin Score artifact — burger-singh — 2026-08-19T080027
+# Kin Score artifact — burger-singh — 2026-09-19T193153
 # The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
 ---
 kin_score:
   slug: burger-singh
-  schema_version: 0.12.0
-  scored_at: '2026-08-19'
-  run_ts: 2026-08-19T080027
-  composite: 33.1
+  schema_version: 0.22.0
+  scored_at: '2026-09-19'
+  run_ts: 2026-09-19T193153
+  composite: 31.2
   band: thin
   facets:
-    discoverability: 81.5
-    contract_quality: 54.1
-    governance: 16.7
+    discoverability: 74.1
+    contract_quality: 55.3
+    contract_governance: 4.5
     operational_transparency: 0.0
     developer_ergonomics: 18.5
-    commercial_clarity: 28.6
+    access_clarity: 28.6
   agent_readiness:
-    score: 38.3
-    band: agent-ready
+    score: 25.8
+    band: agent-aware
     dimensions:
       spec_presence: true
       agentic_access: derived
       reversibility_documented: na
       mcp_server: false
-      auth_clarity: true
+      auth_clarity: bearer
       idempotency: na
       error_semantics: documented
       openapi_examples: documented
@@ -34,6 +34,10 @@ kin_score:
       consent_identity: false
       agent_card: false
       dry_run_mode: na
+      delegated_identity: false
+      protected_resource_metadata: false
+      dynamic_client_registration: false
+      agentic_commerce: false
   provenance:
     mcp: derived
     skills: derived
