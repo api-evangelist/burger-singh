@@ -131,43 +131,47 @@ paths:
                 items:
                   $ref: '#/components/schemas/User'
 components:
+  parameters:
+    context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines the fields present in the response. Only view and embed are available anonymously.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        default: view
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    page:
+      name: page
+      in: query
+      description: Current page of the collection. Defaults to 1.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    perPage:
+      name: per_page
+      in: query
+      description: 'Maximum number of items returned. Verified live: values outside 1-100 return HTTP 400 rest_invalid_param.'
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated list of fields to limit the response to. Verified live.
+      schema:
+        type: string
   schemas:
-    User:
-      type: object
-      description: A public author record as returned anonymously in view context.
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        url:
-          type: string
-        description:
-          type: string
-        link:
-          type: string
-          format: uri
-        slug:
-          type: string
-        avatar_urls:
-          type: object
-          additionalProperties:
-            type: string
-        meta:
-          type: object
-          additionalProperties: true
-        yoast_head:
-          type: string
-        yoast_head_json:
-          type: object
-          additionalProperties: true
-        _links:
-          type: object
-          additionalProperties: true
-      required:
-      - id
-      - name
-      - slug
     RootIndex:
       type: object
       description: The WordPress REST API root discovery document, verified live on 2026-08-08.
@@ -215,32 +219,42 @@ components:
       - url
       - namespaces
       - routes
-    Taxonomy:
+    User:
       type: object
+      description: A public author record as returned anonymously in view context.
       properties:
+        id:
+          type: integer
         name:
           type: string
-        slug:
-          type: string
-        rest_base:
-          type: string
-        rest_namespace:
+        url:
           type: string
         description:
           type: string
-        hierarchical:
-          type: boolean
-        types:
-          type: array
-          items:
+        link:
+          type: string
+          format: uri
+        slug:
+          type: string
+        avatar_urls:
+          type: object
+          additionalProperties:
             type: string
+        meta:
+          type: object
+          additionalProperties: true
+        yoast_head:
+          type: string
+        yoast_head_json:
+          type: object
+          additionalProperties: true
         _links:
           type: object
           additionalProperties: true
       required:
+      - id
+      - name
       - slug
-      - rest_base
-      - types
     ContentType:
       type: object
       properties:
@@ -269,56 +283,42 @@ components:
       required:
       - slug
       - rest_base
+    Taxonomy:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        description:
+          type: string
+        hierarchical:
+          type: boolean
+        types:
+          type: array
+          items:
+            type: string
+        _links:
+          type: object
+          additionalProperties: true
+      required:
+      - slug
+      - rest_base
+      - types
   headers:
-    XWPTotalPages:
-      description: Total number of pages in the collection at the current per_page.
-      schema:
-        type: integer
     XWPTotal:
       description: Total number of items in the collection.
+      schema:
+        type: integer
+    XWPTotalPages:
+      description: Total number of pages in the collection at the current per_page.
       schema:
         type: integer
     LinkPagination:
       description: RFC 8288 Link header carrying next and prev pagination relations. Verified live on /wp/v2/pages.
       schema:
         type: string
-  parameters:
-    page:
-      name: page
-      in: query
-      description: Current page of the collection. Defaults to 1.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    fields:
-      name: _fields
-      in: query
-      description: Comma-separated list of fields to limit the response to. Verified live.
-      schema:
-        type: string
-    context:
-      name: context
-      in: query
-      description: Scope under which the request is made; determines the fields present in the response. Only view and embed are available anonymously.
-      schema:
-        type: string
-        enum:
-        - view
-        - embed
-        default: view
-    search:
-      name: search
-      in: query
-      description: Limit results to those matching a string.
-      schema:
-        type: string
-    perPage:
-      name: per_page
-      in: query
-      description: 'Maximum number of items returned. Verified live: values outside 1-100 return HTTP 400 rest_invalid_param.'
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 10

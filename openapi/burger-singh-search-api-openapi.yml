@@ -67,33 +67,47 @@ paths:
         '400':
           $ref: '#/components/responses/InvalidParam'
 components:
+  parameters:
+    context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines the fields present in the response. Only view and embed are available anonymously.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        default: view
+    search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    page:
+      name: page
+      in: query
+      description: Current page of the collection. Defaults to 1.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    perPage:
+      name: per_page
+      in: query
+      description: 'Maximum number of items returned. Verified live: values outside 1-100 return HTTP 400 rest_invalid_param.'
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    fields:
+      name: _fields
+      in: query
+      description: Comma-separated list of fields to limit the response to. Verified live.
+      schema:
+        type: string
   schemas:
-    SearchResult:
-      type: object
-      description: A lightweight cross-content search result. Shape verified live on 2026-08-08.
-      properties:
-        id:
-          type: integer
-        title:
-          type: string
-        url:
-          type: string
-          format: uri
-        type:
-          type: string
-          description: Search result object type, e.g. post.
-        subtype:
-          type: string
-          description: Concrete content type, e.g. page.
-        _links:
-          type: object
-          additionalProperties: true
-      required:
-      - id
-      - title
-      - url
-      - type
-      - subtype
     Error:
       type: object
       description: The WordPress REST error envelope, verified live on this host. This is NOT RFC 9457 application/problem+json - it is served as application/json with a WordPress-specific shape.
@@ -120,59 +134,45 @@ components:
       - code
       - message
       - data
+    SearchResult:
+      type: object
+      description: A lightweight cross-content search result. Shape verified live on 2026-08-08.
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+          format: uri
+        type:
+          type: string
+          description: Search result object type, e.g. post.
+        subtype:
+          type: string
+          description: Concrete content type, e.g. page.
+        _links:
+          type: object
+          additionalProperties: true
+      required:
+      - id
+      - title
+      - url
+      - type
+      - subtype
   headers:
-    XWPTotalPages:
-      description: Total number of pages in the collection at the current per_page.
-      schema:
-        type: integer
     XWPTotal:
       description: Total number of items in the collection.
+      schema:
+        type: integer
+    XWPTotalPages:
+      description: Total number of pages in the collection at the current per_page.
       schema:
         type: integer
     LinkPagination:
       description: RFC 8288 Link header carrying next and prev pagination relations. Verified live on /wp/v2/pages.
       schema:
         type: string
-  parameters:
-    page:
-      name: page
-      in: query
-      description: Current page of the collection. Defaults to 1.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    fields:
-      name: _fields
-      in: query
-      description: Comma-separated list of fields to limit the response to. Verified live.
-      schema:
-        type: string
-    context:
-      name: context
-      in: query
-      description: Scope under which the request is made; determines the fields present in the response. Only view and embed are available anonymously.
-      schema:
-        type: string
-        enum:
-        - view
-        - embed
-        default: view
-    search:
-      name: search
-      in: query
-      description: Limit results to those matching a string.
-      schema:
-        type: string
-    perPage:
-      name: per_page
-      in: query
-      description: 'Maximum number of items returned. Verified live: values outside 1-100 return HTTP 400 rest_invalid_param.'
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 10
   responses:
     InvalidParam:
       description: One or more query parameters failed validation.

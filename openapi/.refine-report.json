@@ -18,14 +18,10 @@
   ],
   "archived": [],
   "errors": [],
-  "warnings": [],
+  "warnings": [
+    "no openapi/_original/ archive: this run re-split PREVIOUSLY REFINED output, so any base URL it carries is inherited from an earlier pass rather than read from a document the provider published"
+  ],
   "notes": [
-    "burger-singh-discovery-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "burger-singh-media-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "burger-singh-pages-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "burger-singh-search-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "burger-singh-seo-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "burger-singh-taxonomy-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "apis.yml register: already-registered"
   ],
   "skipped": []
